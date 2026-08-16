@@ -361,10 +361,13 @@
                         <img id="prev-zone-img" src="/zone A.png" alt="Zone Image" class="max-w-[185px] max-h-[105px] object-contain rounded">
                     </div>
                     <div id="prev-credentials-container" class="mt-2.5 pt-2 border-t border-dashed border-gray-400 text-center">
+                        <p class="text-[9.5px] font-black text-gray-900 mb-0.5 leading-snug" style="font-family: 'Cairo', sans-serif;">
+                            برجاء تحميل النسخة الالكترونية لضمان عدم تلف او فقدان التذكرة
+                        </p>
                         <p class="text-[9px] font-bold text-gray-800 mb-1 leading-snug" style="font-family: 'Cairo', sans-serif;">
                             صور الكود او افتح <span class="font-mono text-blue-700 font-extrabold dir-ltr inline-block">neiruz.stmarkos.org</span> عشان تحمل نسخة من التذكرة
                         </p>
-                        <p class="text-[10px] text-gray-900 font-semibold font-sans">
+                        <p class="text-[13px] text-gray-900 font-bold font-sans">
                             اسم المستخدم: <strong id="prev-user-digits" class="font-mono text-black font-extrabold">111001</strong> &nbsp;|&nbsp; كلمة المرور: <strong id="prev-user-passcode" class="font-mono text-blue-700 font-extrabold">------</strong>
                         </p>
                         <div class="mt-1.5 flex justify-center items-center">
@@ -1810,6 +1813,7 @@
                         <div class="ticket-barcode">${barcodeSvg}</div>
                         <div class="ticket-zone-img"><img src="${imgSrc}" alt="Zone ${zKey}"></div>
                         <div class="ticket-digital-access">
+                            <p class="access-warning">برجاء تحميل النسخة الالكترونية لضمان عدم تلف او فقدان التذكرة</p>
                             <p class="access-title">صور الكود او افتح <strong>neiruz.stmarkos.org</strong> عشان تحمل نسخة من التذكرة</p>
                             <p class="access-creds">اسم المستخدم: <strong>${digitsOnly}</strong> &nbsp;|&nbsp; كلمة المرور: <strong>${passcode}</strong></p>
                             <div class="ticket-qr"><img src="${qrCodeImg}" alt="QR Code"></div>
@@ -1998,6 +2002,14 @@
                             text-align: center;
                             direction: rtl;
                         }
+                        .access-warning {
+                            font-size: 8px;
+                            font-weight: 800;
+                            color: #000;
+                            margin: 0 0 1px 0;
+                            font-family: 'Cairo', sans-serif;
+                            line-height: 1.25;
+                        }
                         .access-title {
                             font-size: 7.5px;
                             font-weight: 800;
@@ -2007,15 +2019,16 @@
                             line-height: 1.25;
                         }
                         .access-creds {
-                            font-size: 8px;
+                            font-size: 11px;
+                            font-weight: 700;
                             color: #000;
                             margin: 0;
                             font-family: 'Cairo', sans-serif;
                         }
                         .access-creds strong {
                             font-family: 'Courier New', monospace;
-                            font-size: 8.5px;
-                            font-weight: 800;
+                            font-size: 11.5px;
+                            font-weight: 900;
                             letter-spacing: 0.5px;
                         }
                         .ticket-qr {
