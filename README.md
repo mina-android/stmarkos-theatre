@@ -15,7 +15,8 @@ Designed for high-throughput box offices, admission gate barcode scanning, and a
   - 4-level typography hierarchy: `كنيسة مارمرقس` &rarr; `القبطية الارثوذوكسية بمصر الجديدة` &rarr; `عيد النيروز` &rarr; `عام 1744 للشهداء - نيروز 2026`.
   - Printed advisory notice: `برجاء تحميل النسخة الالكترونية لضمان عدم تلف او فقدان التذكرة`.
   - Solid black ticket number with no background container for crisp thermal printing.
-- **Instant Ticket Re-Printing:**
+- **Instant Ticket Re-Printing & Operator Guidance:**
+  - **Operator Guidance Banner:** Prominent advisory (`اذا لم تتم طباعة التذكرة برجاء اعادة طباعتها`) above the preview card to guide ticket booth operators.
   - **Preview Re-print Button:** Dedicated button on the box office counter allowing operators to immediately re-print the last issued ticket(s) if paper jams or runs out without re-booking seats.
   - **Audit Log Re-print (Admins & Superusers):** Ability to re-print any previously issued ticket directly from the audit log table (`panel-audit`) using its exact original parameters.
 - **Batch Ticket Printing:** Allows booth operators to print multiple consecutive tickets in a single request with auto-incrementing sequential numbers.
