@@ -11,13 +11,20 @@ Designed for high-throughput box offices, admission gate barcode scanning, and a
 - **Concurrent Row-Level Locking:** Prevents double-booking even when multiple ticket booths print the final remaining seat at the exact same millisecond using PostgreSQL `SELECT ... FOR UPDATE` transactions.
 - **Zero-Friction Silent Printing:** Bypasses browser print popups and PDF dialogs by sending formatted label templates directly to default thermal label printers (Zebra, Xprinter, etc.) via Electron OS printer integration.
 - **12-Hour AM/PM Time Formatting:** All printed labels and digital tickets display clean 12-hour timestamps with Arabic indicators (e.g. `الساعة: 6:30 م`) without redundant end-times.
+- **Hierarchical Printed Header & Digital Backup Guidance:**
+  - 4-level typography hierarchy: `كنيسة مارمرقس` &rarr; `القبطية الارثوذوكسية بمصر الجديدة` &rarr; `عيد النيروز` &rarr; `عام 1744 للشهداء - نيروز 2026`.
+  - Printed advisory notice: `برجاء تحميل النسخة الالكترونية لضمان عدم تلف او فقدان التذكرة`.
+  - Solid black ticket number with no background container for crisp thermal printing.
+- **Instant Ticket Re-Printing:**
+  - **Preview Re-print Button:** Dedicated button on the box office counter allowing operators to immediately re-print the last issued ticket(s) if paper jams or runs out without re-booking seats.
+  - **Audit Log Re-print (Admins & Superusers):** Ability to re-print any previously issued ticket directly from the audit log table (`panel-audit`) using its exact original parameters.
 - **Batch Ticket Printing:** Allows booth operators to print multiple consecutive tickets in a single request with auto-incrementing sequential numbers.
 - **Intelligent Gate Admission Scanner & Show-Time Validation:** Hardware barcode scanner integration that verifies ticket validity, cross-references show date/time against the active gate show to prevent wrong-time admissions (without marking the ticket as used), detects duplicate entries, and gives real-time audio-visual feedback (Web Audio API synthesizers).
 - **Gate Show Visibility Control (Superuser):** Superusers can toggle which specific shows appear in the gate check-in dropdown for operators, preventing human error during rush hours.
 - **Role-Based Access Control (4 Tier RBAC):**
-  - **Level 3 - Superuser (`superuser`):** Full system control, show CRUD, seat capacity overrides, user management, audit logs truncation, and gate visibility manager.
-  - **Level 2 - Admin (`admin`):** Dashboard monitoring, ticket printing, gate admission, and audit log inspection.
-  - **Level 1 - Ticket Seller (`ticket_seller`):** Ticket printing counter and gate admission.
+  - **Level 3 - Superuser (`superuser`):** Full system control, show CRUD, seat capacity overrides, user management, audit logs truncation, gate visibility manager, and audit log re-printing.
+  - **Level 2 - Admin (`admin`):** Dashboard monitoring, ticket printing, gate admission, audit log inspection, and audit log re-printing.
+  - **Level 1 - Ticket Seller (`ticket_seller`):** Ticket printing counter, preview re-printing, and gate admission.
   - **Level 0 - Gate Scanner (`scanner`):** Dedicated entrance scanner terminal only; immediately redirects to gate tab with all other tabs hidden.
 - **Secure Tab-Isolated Sessions:** Admin sessions use `sessionStorage`, automatically terminating when the tab or browser is closed to protect kiosk and shared terminal security.
 - **Attendee Self-Service Portal (`neiruz.stmarkos.org` / `my-ticket.html`):** Attendees can log in using their ticket number and random 6-character security passcode to view and download high-resolution PNG copies of their ticket generated via `html2canvas`.
@@ -67,7 +74,8 @@ graph TD
 
 ## 🗄️ Database Schema & Data Models
 
-Database creation script: [`db/schema.sql`](db/schema.sql)
+Database creation script: [`db/schema.sql`](db/schema.sql)  
+Database export/seed script: [`db/export_seed.py`](db/export_seed.py) &rarr; [`db/seed.sql`](db/seed.sql)
 
 ```mermaid
 erDiagram
@@ -122,15 +130,6 @@ erDiagram
     }
 ```
 
-### Initial Show Seeding
-- The database comes pre-seeded with **31 shows** imported from [`Copy of Neiruz Tickets 2026.xlsm`](Copy of Neiruz Tickets 2026.xlsm) via [`db/seed.py`](db/seed.py).
-- Each show contains **4 distinct seating zones**:
-  - **Zone A:** Capacity 125 seats
-  - **Zone B:** Capacity 20 seats
-  - **Zone C:** Capacity 110 seats
-  - **Zone D:** Capacity 155 seats
-  - *(Total: 410 seats per show)*
-
 ---
 
 ## 🎫 Ticket Numbering & Security Format
@@ -180,7 +179,7 @@ The project includes an optimized, production-hardened Docker configuration.
 2. **PostgreSQL 14+**:
    - Create a database named `theatre_tickets`.
    - Run [`db/schema.sql`](db/schema.sql) to create tables.
-   - Run [`db/seed.sql`](db/seed.sql) to import pre-configured shows.
+   - Run [`db/seed.sql`](db/seed.sql) to import pre-configured shows and registered accounts.
 
 #### Starting the Server
 1. Navigate to the `server` directory:
@@ -208,12 +207,13 @@ The project includes an optimized, production-hardened Docker configuration.
 
 ---
 
-### Method 3: Cloud Deployment (Vercel + Managed Postgres)
+### Method 3: Cloud Deployment (Vercel + Cloud PostgreSQL)
 
-To host the public attendee self-service portal on Vercel:
-1. Connect a hosted cloud PostgreSQL database ([Neon](https://neon.tech), [Supabase](https://supabase.com), or [Railway](https://railway.app)).
-2. Set the `DATABASE_URL` environment variable on your Vercel project settings.
-3. Deploy directly via GitHub integration or the Vercel CLI (`vercel --prod`).
+To host the public attendee portal on Vercel:
+1. Connect a hosted cloud PostgreSQL database ([Neon.tech](https://neon.tech), [Supabase](https://supabase.com), or [Railway](https://railway.app)).
+2. In the cloud SQL editor, run [`db/schema.sql`](db/schema.sql) followed by [`db/seed.sql`](db/seed.sql).
+3. Set the `DATABASE_URL` environment variable in your Vercel Project Settings.
+4. Point your GoDaddy custom domain (`neiruz.stmarkos.org`) via CNAME to `cname.vercel-dns.com`.
 
 ---
 
@@ -230,7 +230,7 @@ Web browsers block background silent printing for security reasons. To enable in
    ```cmd
    npm start
    ```
-4. Clicking **"طباعة التذكرة فوراً" (Print Ticket)** will immediately route the formatted label template directly to the machine's default thermal label printer with no prompts or delays.
+4. Clicking **"طباعة التذكرة فوراً"** or **"إعادة طباعة التذكرة المعروضة"** will immediately route the formatted label template directly to the machine's default thermal label printer with no prompts or delays.
 
 ---
 
@@ -255,7 +255,7 @@ Web browsers block background silent printing for security reasons. To enable in
 | `/api/users` | `POST` | `{ username, fullName, password, role }` | Creates a new system user account (`superuser`, `admin`, `ticket_seller`, `scanner`). |
 | `/api/users/delete` | `POST` | `{ userId: number }` | Removes a system user account. |
 | `/api/users/change-password` | `POST` | `{ userId: number, newPassword: string }` | Updates an operator's password. |
-| `/api/logs` | `GET` | — | Returns the latest 200 auditing records for printing and admissions. |
+| `/api/logs` | `GET` | — | Returns the latest 200 auditing records with full show timestamps and passcode data for re-printing. |
 | `/api/logs/clear` | `POST` | — | Truncates the `ticket_logs` table (Superuser only). |
 | `/api/gate/stats` | `GET` | — | Returns gate entrance statistics (total printed, total entered, duplicates, wrong shows). |
 
@@ -278,7 +278,8 @@ c:/Projects/theatre/
 │
 ├── db/
 │   ├── schema.sql                         # PostgreSQL schema (tables, constraints, cascades)
-│   ├── seed.sql                           # Pre-generated seed SQL data for 31 shows
+│   ├── seed.sql                           # Pre-generated seed SQL data for shows, zones, and users
+│   ├── export_seed.py                     # Python script to dump live database entries into seed.sql
 │   ├── seed.py                            # Python script to convert Excel data to seed.sql
 │   └── execute_seed.py                    # Direct DB execution script for schema & seed
 │
