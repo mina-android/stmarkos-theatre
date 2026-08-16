@@ -1,4 +1,4 @@
-﻿services:
+services:
 
   db:
     image: postgres:16-alpine
@@ -16,6 +16,7 @@
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./db/schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+      - ./db/seed.sql:/docker-entrypoint-initdb.d/02_seed.sql:ro
     networks:
       - theatre_net
 

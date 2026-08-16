@@ -26,8 +26,10 @@ if %errorlevel% neq 0 (
 
 echo.
 echo [2/3] Server started successfully on port 5000!
-echo [3/3] Opening browser preview...
-start http://localhost:5000
+echo       - Attendee Portal: http://localhost:5000
+echo       - Admin Dashboard: http://localhost:5000/admin.html
+echo [3/3] Opening Admin Dashboard...
+start http://localhost:5000/admin.html
 
 echo.
 echo ========================================================
