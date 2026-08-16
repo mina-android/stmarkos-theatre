@@ -48,13 +48,13 @@
         /* Digital Ticket Card Styles */
         .digital-ticket-container {
             width: 100%;
-            max-width: 380px;
+            max-width: 400px;
             margin: 0 auto;
             background: #ffffff;
             color: #000000;
             border-radius: 20px;
             box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.15);
-            padding: 24px 20px 20px 20px;
+            padding: 22px 18px 18px 18px;
             box-sizing: border-box;
             direction: rtl;
             text-align: center;
@@ -166,16 +166,22 @@
                 <!-- Printable / Downloadable Digital Ticket Container -->
                 <div id="digital-ticket-render" class="digital-ticket-container animate-fade-in">
                     <!-- Top Logos Header -->
-                    <div class="flex justify-between items-center pb-2 mb-2 border-b border-black">
-                        <div class="w-[26%] flex justify-center items-center translate-x-[15px]">
-                            <img id="dt-logo-stmarkos" src="/st markos-01.png" alt="كنيسة مارمرقس" class="max-h-28 w-auto object-contain">
+                    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; padding-bottom: 8px; margin-bottom: 8px; border-bottom: 1px solid #000;">
+                        <div style="width: 58px; display: flex; justify-content: center; align-items: center; flex-shrink: 0;">
+                            <img id="dt-logo-stmarkos" src="/st markos-01.png" alt="كنيسة مارمرقس" style="max-height: 70px; max-width: 58px; width: auto; height: auto; object-fit: contain; display: block;">
                         </div>
-                        <div class="w-[50%] text-center text-black px-1">
-                            <p class="text-[13.5px] font-black leading-tight mb-1 text-black" style="font-family: 'Cairo', sans-serif;">كنيسة مارمرقس القبطية<br>الارثوذوكسية بمصر الجديدة</p>
-                            <p class="text-[12.5px] font-bold text-gray-800 leading-tight" style="font-family: 'Cairo', sans-serif;">عيد النيروز لعام 1744 للشهداء<br>نيروز 2026</p>
+                        <div style="flex: 1; text-align: center; padding: 0 4px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                            <p style="font-family: 'Cairo', sans-serif; font-size: 12px; font-weight: 800; line-height: 1.3; margin: 0 0 2px 0; color: #000; white-space: nowrap;">
+                                كنيسة مارمرقس القبطية<br>
+                                <span style="white-space: nowrap;">الارثوذوكسية بمصر الجديدة</span>
+                            </p>
+                            <p style="font-family: 'Cairo', sans-serif; font-size: 10.5px; font-weight: 700; line-height: 1.25; margin: 0; color: #333333; white-space: nowrap;">
+                                عيد النيروز لعام 1744 للشهداء<br>
+                                نيروز 2026
+                            </p>
                         </div>
-                        <div class="w-[24%] flex justify-center items-center -translate-x-[10px]">
-                            <img id="dt-logo-theater" src="/Theater Logo.png" alt="شعار المسرح" class="max-h-16 w-auto object-contain">
+                        <div style="width: 52px; display: flex; justify-content: center; align-items: center; flex-shrink: 0;">
+                            <img id="dt-logo-theater" src="/Theater Logo.png" alt="شعار المسرح" style="max-height: 46px; max-width: 52px; width: auto; height: auto; object-fit: contain; display: block;">
                         </div>
                     </div>
 
@@ -247,13 +253,14 @@
         function formatTime12H(timeStr) {
             if (!timeStr) return '';
             const clean = timeStr.toString().trim();
-            if (clean.includes('م') || clean.includes('ص') || clean.includes('AM') || clean.includes('PM')) {
+            if (clean.includes('م') || clean.includes('ص') || clean.includes('AM') || clean.includes('PM') || clean.includes('am') || clean.includes('pm')) {
                 return clean;
             }
             const parts = clean.split(':');
             if (parts.length >= 2) {
-                let h = parseInt(parts[0]);
-                const m = parts[1].padStart(2, '0');
+                let h = parseInt(parts[0], 10);
+                if (isNaN(h)) return clean;
+                const m = parts[1].substring(0, 2).padStart(2, '0');
                 const period = h >= 12 ? 'م' : 'ص';
                 h = h % 12;
                 if (h === 0) h = 12;
@@ -268,7 +275,10 @@
             if (s && e) {
                 return `من ${s} إلى ${e}`;
             }
-            return s || e || '';
+            if (s) {
+                return `الساعة ${s}`;
+            }
+            return e ? `الساعة ${e}` : '';
         }
 
         // Generate barcode SVG
@@ -365,7 +375,7 @@
         function renderDigitalTicket(ticket) {
             // Fill content
             document.getElementById('dt-show-name').innerText = ticket.showName;
-            document.getElementById('dt-date-time').innerText = `${getArabicDayOfWeek(ticket.showDate)} ${ticket.showDate} - ${formatShowTimeRange(ticket.showTime, ticket.showEndTime)}`;
+            document.getElementById('dt-date-time').innerText = `${getArabicDayOfWeek(ticket.showDate)} ${ticket.showDate} - الساعة: ${formatTime12H(ticket.showTime)}`;
             document.getElementById('dt-ticket-id').innerText = ticket.ticketId;
             document.getElementById('dt-user-digits').innerText = ticket.ticketDigits;
             document.getElementById('dt-user-passcode').innerText = ticket.passcode;

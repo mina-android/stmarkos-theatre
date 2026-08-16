@@ -331,16 +331,22 @@
                     <span id="preview-status-badge" class="bg-blue-600/10 text-blue-400 border border-blue-500/25 text-[10px] px-2 py-0.5 rounded font-bold">معاينة قبل الطباعة</span>
                 </h4>
                 <div class="bg-white text-black p-5 rounded-xl shadow-inner font-mono max-w-sm mx-auto text-center border-2 border-dashed border-gray-300">
-                    <div class="flex justify-between items-center pb-2 mb-2 border-b border-gray-300">
-                        <div class="w-[26%] flex justify-center items-center translate-x-[15px]">
-                            <img src="/st markos-01.png" alt="St Markos" class="max-h-24 w-auto object-contain">
+                    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; padding-bottom: 8px; margin-bottom: 8px; border-bottom: 1px solid #cbd5e1;">
+                        <div style="width: 58px; display: flex; justify-content: center; align-items: center; flex-shrink: 0;">
+                            <img src="/st markos-01.png" alt="St Markos" style="max-height: 70px; max-width: 58px; width: auto; height: auto; object-fit: contain; display: block;">
                         </div>
-                        <div class="w-[50%] text-center text-gray-900 px-1">
-                            <p class="text-[14px] font-extrabold leading-tight mb-1" style="font-family: 'Cairo', sans-serif;">كنيسة مارمرقس القبطية<br>الارثوذوكسية بمصر الجديدة</p>
-                            <p class="text-[12.5px] font-bold text-gray-700 leading-tight" style="font-family: 'Cairo', sans-serif;">عيد النيروز لعام 1744 للشهداء<br>نيروز 2026</p>
+                        <div style="flex: 1; text-align: center; padding: 0 4px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                            <p style="font-family: 'Cairo', sans-serif; font-size: 12px; font-weight: 800; line-height: 1.3; margin: 0 0 2px 0; color: #000; white-space: nowrap;">
+                                كنيسة مارمرقس القبطية<br>
+                                <span style="white-space: nowrap;">الارثوذوكسية بمصر الجديدة</span>
+                            </p>
+                            <p style="font-family: 'Cairo', sans-serif; font-size: 10.5px; font-weight: 700; line-height: 1.25; margin: 0; color: #475569; white-space: nowrap;">
+                                عيد النيروز لعام 1744 للشهداء<br>
+                                نيروز 2026
+                            </p>
                         </div>
-                        <div class="w-[24%] flex justify-center items-center -translate-x-[10px]">
-                            <img src="/Theater Logo.png" alt="Theater Logo" class="max-h-12 w-auto object-contain">
+                        <div style="width: 52px; display: flex; justify-content: center; align-items: center; flex-shrink: 0;">
+                            <img src="/Theater Logo.png" alt="Theater Logo" style="max-height: 46px; max-width: 52px; width: auto; height: auto; object-fit: contain; display: block;">
                         </div>
                     </div>
                     <p id="prev-show-name" class="font-extrabold text-lg border-b pb-2 mb-2">اسم العرض المسرحي</p>
@@ -1066,13 +1072,14 @@
         function formatTime12H(timeStr) {
             if (!timeStr) return '';
             const clean = timeStr.toString().trim();
-            if (clean.includes('م') || clean.includes('ص') || clean.includes('AM') || clean.includes('PM')) {
+            if (clean.includes('م') || clean.includes('ص') || clean.includes('AM') || clean.includes('PM') || clean.includes('am') || clean.includes('pm')) {
                 return clean;
             }
             const parts = clean.split(':');
             if (parts.length >= 2) {
-                let h = parseInt(parts[0]);
-                const m = parts[1].padStart(2, '0');
+                let h = parseInt(parts[0], 10);
+                if (isNaN(h)) return clean;
+                const m = parts[1].substring(0, 2).padStart(2, '0');
                 const period = h >= 12 ? 'م' : 'ص';
                 h = h % 12;
                 if (h === 0) h = 12;
@@ -1516,6 +1523,8 @@
             
             // Update preview box
             if (selectedShow) {
+                document.getElementById('prev-show-name').innerText = selectedShow.name || '';
+                document.getElementById('prev-date-time').innerText = `${getArabicDayOfWeek(selectedShow.date)} ${selectedShow.date} - الساعة: ${formatTime12H(selectedShow.time)}`;
                 const zone = selectedShow.zones.find(z => z.zone_name === zoneName);
                 if (zone) {
                     const startNum = zone.total_capacity - zone.available_seats + 1;
@@ -1625,7 +1634,7 @@
 
                     // Update latest preview
                     document.getElementById('prev-show-name').innerText = firstTicket.showName;
-                    document.getElementById('prev-date-time').innerText = `${getArabicDayOfWeek(firstTicket.date)} ${firstTicket.date} - ${firstTicket.time}`;
+                    document.getElementById('prev-date-time').innerText = `${getArabicDayOfWeek(firstTicket.date)} ${firstTicket.date} - الساعة: ${formatTime12H(firstTicket.time)}`;
                     
                     if (tickets.length > 1) {
                         document.getElementById('prev-ticket-id').innerText = `${firstTicket.ticketId}  إلى  ${lastTicket.ticketId} (${tickets.length} تذاكر)`;
@@ -1700,7 +1709,7 @@
                             </div>
                         </div>
                         <div class="title">${ticket.showName}</div>
-                        <div class="details">${getArabicDayOfWeek(ticket.date)} ${ticket.date} &nbsp;-&nbsp; الساعة: ${ticket.time}</div>
+                        <div class="details">${getArabicDayOfWeek(ticket.date)} ${ticket.date} &nbsp;-&nbsp; الساعة: ${formatTime12H(ticket.time)}</div>
                         <div class="ticket-id">${ticket.ticketId}</div>
                         <div class="ticket-barcode">${barcodeSvg}</div>
                         <div class="ticket-zone-img"><img src="${imgSrc}" alt="Zone ${zKey}"></div>
@@ -1799,20 +1808,22 @@
                             align-items: center;
                         }
                         .church-title {
-                            font-size: 12px;
+                            font-size: 11.5px;
                             font-weight: 800;
                             line-height: 1.25;
                             margin: 0 0 2px 0;
                             color: #000;
                             font-family: 'Cairo', sans-serif;
+                            white-space: nowrap;
                         }
                         .festival-title {
-                            font-size: 11.5px;
+                            font-size: 11px;
                             font-weight: 700;
                             line-height: 1.25;
                             margin: 0;
                             color: #000;
                             font-family: 'Cairo', sans-serif;
+                            white-space: nowrap;
                         }
                         .title {
                             font-size: 15px;
