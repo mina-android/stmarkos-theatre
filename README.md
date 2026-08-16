@@ -1,24 +1,28 @@
-# Theater Ticketing & Silent Printing System (Neiruz 2026)
+# Theater Ticketing, Silent Printing & Gate Admission System (Neiruz 2026)
 
 A lightweight, high-performance theater seat inventory management, automated silent label printing, and gate admission verification system built for **St. Markos Church (Heliopolis) – Neiruz 2026 Festival (1744 Martyrs)**.
 
-Designed for high-throughput box offices, gate scanning, and attendee self-service, it prevents double bookings during concurrent printing, eliminates print dialogues via an Electron wrapper, verifies ticket validity at admission gates, and provides attendees with a digital ticket self-service portal.
+Designed for high-throughput box offices, admission gate barcode scanning, and attendee self-service. It prevents double bookings during concurrent printing via row-level database locking, eliminates print dialogues via an Electron wrapper, validates ticket validity at admission gates with audio-visual feedback, and provides attendees with a digital ticket self-service portal.
 
 ---
 
 ## 🌟 Key Features
 
 - **Concurrent Row-Level Locking:** Prevents double-booking even when multiple ticket booths print the final remaining seat at the exact same millisecond using PostgreSQL `SELECT ... FOR UPDATE` transactions.
-- **Zero-Friction Silent Printing:** Bypasses browser print popups and PDF dialogs by sending formatted label templates directly to default thermal printers (Zebra, Xprinter, etc.) via Electron OS printer integration.
+- **Zero-Friction Silent Printing:** Bypasses browser print popups and PDF dialogs by sending formatted label templates directly to default thermal label printers (Zebra, Xprinter, etc.) via Electron OS printer integration.
+- **12-Hour AM/PM Time Formatting:** All printed labels and digital tickets display clean 12-hour timestamps with Arabic indicators (e.g. `الساعة: 6:30 م`) without redundant end-times.
 - **Batch Ticket Printing:** Allows booth operators to print multiple consecutive tickets in a single request with auto-incrementing sequential numbers.
-- **Intelligent Gate Admission Scanner & Show-Time Validation:** Hardware barcode scanner integration that verifies ticket validity, cross-references show date/time against the active gate show to prevent wrong-time admissions (without marking the ticket as used), detects duplicate entries, and gives real-time audio-visual feedback.
-- **Role-Based Access Control (RBAC):** Distinct roles (`superuser`, `admin`, `ticketseller`) with role-tailored navigation, automatic redirect to the sales counter for sellers, and hidden administrative tabs.
+- **Intelligent Gate Admission Scanner & Show-Time Validation:** Hardware barcode scanner integration that verifies ticket validity, cross-references show date/time against the active gate show to prevent wrong-time admissions (without marking the ticket as used), detects duplicate entries, and gives real-time audio-visual feedback (Web Audio API synthesizers).
+- **Gate Show Visibility Control (Superuser):** Superusers can toggle which specific shows appear in the gate check-in dropdown for operators, preventing human error during rush hours.
+- **Role-Based Access Control (4 Tier RBAC):**
+  - **Level 3 - Superuser (`superuser`):** Full system control, show CRUD, seat capacity overrides, user management, audit logs truncation, and gate visibility manager.
+  - **Level 2 - Admin (`admin`):** Dashboard monitoring, ticket printing, gate admission, and audit log inspection.
+  - **Level 1 - Ticket Seller (`ticket_seller`):** Ticket printing counter and gate admission.
+  - **Level 0 - Gate Scanner (`scanner`):** Dedicated entrance scanner terminal only; immediately redirects to gate tab with all other tabs hidden.
 - **Secure Tab-Isolated Sessions:** Admin sessions use `sessionStorage`, automatically terminating when the tab or browser is closed to protect kiosk and shared terminal security.
-- **Attendee Self-Service Portal (`neiruz.stmarkos.org` / `my-ticket.html`):** Attendees can log in using their ticket number and random security passcode to view and download high-resolution PNG copies of their ticket.
+- **Attendee Self-Service Portal (`neiruz.stmarkos.org` / `my-ticket.html`):** Attendees can log in using their ticket number and random 6-character security passcode to view and download high-resolution PNG copies of their ticket generated via `html2canvas`.
 - **Domain-Optimized Routing:** The root URL (`/` or `neiruz.stmarkos.org`) routes directly to the public attendee portal, while administrative functions are accessed via `admin.html`.
 - **Real-Time Monitoring Dashboard:** Live overview of occupancy rates, total capacity, remaining seats per zone, chronological show ordering, and quick seat refilling tools.
-- **Full Show Lifecycle Management:** Create, edit, and delete shows with structured start (`time`) and end (`end_time`) timestamps and custom zone configurations.
-- **Device Auditing & Accountability:** Automatically assigns unique UUIDs to every client terminal (box office / gate) and records an immutable log of every print and admission action.
 - **100% Offline Resilience:** Embedded Base64 graphical assets (church logos, theater logos, zone seat maps, and Neiruz QR code) ensure printing and rendering work without external internet access.
 - **RTL & BiDi Text Engine:** Fully styled Arabic interface with strict `unicode-bidi: isolate` handling on alphanumeric/numeric fields to eliminate cursor jumping and reverse-typing issues.
 
@@ -80,6 +84,7 @@ erDiagram
         date date "Show Date"
         string time "Show Start Time (HH:MM)"
         string end_time "Show End Time (HH:MM)"
+        boolean is_gate_active "Gate Visibility Flag"
     }
 
     zones {
@@ -99,8 +104,9 @@ erDiagram
         int id PK
         string username "Unique Username"
         string password_hash "Salted SHA-256 Hash"
-        string display_name "Full Name"
-        string role "superuser / admin / ticketseller"
+        string full_name "Full Name"
+        string role "superuser / admin / ticket_seller / scanner"
+        boolean is_active "Active Status"
         timestamp created_at "Created Timestamp"
     }
 
@@ -202,6 +208,15 @@ The project includes an optimized, production-hardened Docker configuration.
 
 ---
 
+### Method 3: Cloud Deployment (Vercel + Managed Postgres)
+
+To host the public attendee self-service portal on Vercel:
+1. Connect a hosted cloud PostgreSQL database ([Neon](https://neon.tech), [Supabase](https://supabase.com), or [Railway](https://railway.app)).
+2. Set the `DATABASE_URL` environment variable on your Vercel project settings.
+3. Deploy directly via GitHub integration or the Vercel CLI (`vercel --prod`).
+
+---
+
 ## 🖥️ Running the Electron Client (For Ticket Printing Terminals)
 
 Web browsers block background silent printing for security reasons. To enable instant silent printing on ticket issuing terminals:
@@ -223,24 +238,26 @@ Web browsers block background silent printing for security reasons. To enable in
 
 | Endpoint | Method | Payload / Params | Description |
 | :--- | :---: | :--- | :--- |
-| `/api/auth/login` | `POST` | `{ username, password }` | Authenticates system users (`superuser`, `admin`, `ticketseller`). |
-| `/api/shows` | `GET` | — | Returns all shows ordered chronologically by date and start time with zones and seat availability. |
-| `/api/shows` | `POST` | `{ name, prefix, date, startTime, endTime, zones: [...] }` | Registers a new show with custom zone capacities. |
-| `/api/shows/update` | `POST` | `{ id, name, prefix, date, startTime, endTime }` | Updates an existing show's schedule or metadata. |
+| `/api/auth/login` | `POST` | `{ username, password }` | Authenticates system users (`superuser`, `admin`, `ticket_seller`, `scanner`). |
+| `/api/shows` | `GET` | — | Returns all shows ordered chronologically by date and start time with zones, seat availability, and `is_gate_active` status. |
+| `/api/shows` | `POST` | `{ name, prefix, date, startTime, endTime, is_gate_active, zones: [...] }` | Registers a new show with custom zone capacities. |
+| `/api/shows/update` | `POST` | `{ id, name, prefix, date, startTime, endTime, is_gate_active }` | Updates an existing show's schedule or metadata. |
 | `/api/shows/delete` | `POST` | `{ id: number }` | Deletes a show and cascades deletion to associated zones and ticket logs. |
+| `/api/shows/toggle-gate` | `POST` | `{ showId: number, is_gate_active: boolean }` | Toggles whether a show appears in the gate check-in dropdown for operators. |
+| `/api/shows/batch-gate` | `POST` | `{ setAll: boolean }` or `{ activeShowIds: [...] }` | Activates or deactivates all gate shows in bulk. |
 | `/api/devices/register` | `POST` | `{ id: UUID, deviceName: string }` | Registers or updates a terminal device name. |
 | `/api/tickets/print` | `POST` | `{ showId, zoneName, deviceId, count }` | Executes an atomic row-locked booking transaction and returns ticket details. |
 | `/api/tickets/verify` | `POST` | `{ code, activeShowId, deviceId }` | Validates ticket, prevents admission if for wrong show/time without consuming ticket, and records entry if valid. |
 | `/api/zones/update` | `POST` | `{ zoneId, capacity, availableSeats }` | Manually updates zone capacity or available seat count. |
 | `/api/zones/refill-all` | `POST` | — | Resets all zones across all shows to full capacity (`available_seats = total_capacity`). |
 | `/api/user/ticket-login` | `POST` | `{ ticketDigits, passcode }` | Authenticates attendee for digital ticket view & PNG download. |
-| `/api/users` | `GET` | — | Returns all registered system operators (Superuser/Admin only). |
-| `/api/users/create` | `POST` | `{ username, password, displayName, role }` | Creates a new system user account. |
-| `/api/users/delete` | `POST` | `{ id: number }` | Removes a system user account. |
-| `/api/users/change-password` | `POST` | `{ id: number, newPassword: string }` | Updates an operator's password. |
+| `/api/users` | `GET` | — | Returns all registered system operators (Superuser only). |
+| `/api/users` | `POST` | `{ username, fullName, password, role }` | Creates a new system user account (`superuser`, `admin`, `ticket_seller`, `scanner`). |
+| `/api/users/delete` | `POST` | `{ userId: number }` | Removes a system user account. |
+| `/api/users/change-password` | `POST` | `{ userId: number, newPassword: string }` | Updates an operator's password. |
 | `/api/logs` | `GET` | — | Returns the latest 200 auditing records for printing and admissions. |
-| `/api/logs/clear` | `POST` | — | Truncates the `ticket_logs` table. |
-| `/api/gate/stats` | `GET` | — | Returns gate entrance statistics (total printed, total entered, recent admissions). |
+| `/api/logs/clear` | `POST` | — | Truncates the `ticket_logs` table (Superuser only). |
+| `/api/gate/stats` | `GET` | — | Returns gate entrance statistics (total printed, total entered, duplicates, wrong shows). |
 
 ---
 
@@ -249,7 +266,7 @@ Web browsers block background silent printing for security reasons. To enable in
 ```
 c:/Projects/theatre/
 ├── Copy of Neiruz Tickets 2026.xlsm       # Original Excel workbook with show schedules
-├── README.md                              # Project documentation and guide
+├── README.md                              # Comprehensive project documentation
 ├── Theater_Ticketing_System_Requirements.md # Technical specification & requirements document
 ├── docker-compose.yml                     # Multi-container orchestration (PostgreSQL 16 + API)
 ├── start_docker.bat / stop_docker.bat     # Windows one-click batch scripts for Docker
@@ -278,7 +295,7 @@ c:/Projects/theatre/
         ├── zone_images.js                 # Embedded Base64 zone maps & logos for offline mode
         ├── Theater Logo.png               # Neiruz theater logo
         ├── st markos-01.png               # St. Markos Church official logo
-        ├── qr-code.png                    # QR code graphic printed on thermal labels
+        ├── qrcode_neiruz.stmarkos.org.png # QR code graphic printed on thermal labels
         └── zone A.png ... zone D.png      # Seating zone diagrams
 ```
 
