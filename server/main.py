@@ -681,7 +681,8 @@ class TheatreHTTPHandler(BaseHTTPRequestHandler):
             logs = query_as_dicts(
                 conn,
                 """
-                SELECT l.id, s.name as show_name, s.prefix as show_prefix, z.zone_name, d.device_name, l.action, l.ticket_number, l.printed_at
+                SELECT l.id, s.id as show_id, s.name as show_name, s.prefix as show_prefix, s.date as show_date, s.time as show_time, s.end_time as show_end_time,
+                       z.id as zone_id, z.zone_name, d.device_name, l.action, l.ticket_number, l.passcode, l.printed_at
                 FROM ticket_logs l
                 JOIN shows s ON s.id = l.show_id
                 JOIN zones z ON z.id = l.zone_id
@@ -696,6 +697,9 @@ class TheatreHTTPHandler(BaseHTTPRequestHandler):
                 prefix = log.get('show_prefix') or ''
                 t_num = int(log.get('ticket_number') or 0)
                 log['formatted_ticket_id'] = f"{z_name} - {prefix}{z_digit}{t_num:03d}"
+                log['ticket_digits'] = f"{prefix}{z_digit}{t_num:03d}"
+                if log.get('show_date'):
+                    log['show_date'] = str(log['show_date'])
             
             self.send_json(logs)
         except Exception as e:
