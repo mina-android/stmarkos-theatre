@@ -679,37 +679,47 @@
                 </button>
             </div>
 
-            <!-- User Roles Explanation Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
-                    <div class="flex items-center gap-3 mb-2">
-                        <span class="w-8 h-8 rounded-xl bg-amber-50 text-amber-700 border border-amber-200 flex items-center justify-center font-black text-sm">1</span>
+            <!-- User Roles Explanation Cards (4 Levels) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+                <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
+                    <div class="flex items-center gap-2.5 mb-2">
+                        <span class="w-7 h-7 rounded-xl bg-cyan-50 text-cyan-700 border border-cyan-200 flex items-center justify-center font-black text-xs">0</span>
                         <div>
-                            <h4 class="font-bold text-slate-900 text-sm">بائع تذاكر (Ticket Seller)</h4>
-                            <p class="text-[11px] text-slate-500">المستوى الأول</p>
+                            <h4 class="font-bold text-slate-900 text-xs">ماسح البوابة (Scanner)</h4>
+                            <p class="text-[10px] text-slate-500">المستوى المخصص للبوابات</p>
                         </div>
                     </div>
-                    <p class="text-xs text-slate-600 leading-relaxed">صلاحية محددة تشمل <strong>بوابة قطع التذاكر</strong> و<strong>بوابة الدخول</strong> فقط.</p>
+                    <p class="text-[11px] text-slate-600 leading-relaxed">صلاحية مقتصرة على <strong>بوابة الدخول ومسح التذاكر</strong> فقط، دون إمكانية الوصول لباقي الأقسام.</p>
                 </div>
-                <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
-                    <div class="flex items-center gap-3 mb-2">
-                        <span class="w-8 h-8 rounded-xl bg-blue-50 text-blue-700 border border-blue-200 flex items-center justify-center font-black text-sm">2</span>
+                <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
+                    <div class="flex items-center gap-2.5 mb-2">
+                        <span class="w-7 h-7 rounded-xl bg-amber-50 text-amber-700 border border-amber-200 flex items-center justify-center font-black text-xs">1</span>
                         <div>
-                            <h4 class="font-bold text-slate-900 text-sm">مشرف (Admin)</h4>
-                            <p class="text-[11px] text-slate-500">المستوى الثاني</p>
+                            <h4 class="font-bold text-slate-900 text-xs">بائع تذاكر (Ticket Seller)</h4>
+                            <p class="text-[10px] text-slate-500">المستوى الأول</p>
                         </div>
                     </div>
-                    <p class="text-xs text-slate-600 leading-relaxed">صلاحية تشمل <strong>لوحة المراقبة</strong>، <strong>بوابة الدخول</strong>، و<strong>سجلات التدقيق</strong>.</p>
+                    <p class="text-[11px] text-slate-600 leading-relaxed">صلاحية تشمل <strong>بوابة قطع التذاكر</strong> و<strong>بوابة الدخول والتحقق</strong>.</p>
                 </div>
-                <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
-                    <div class="flex items-center gap-3 mb-2">
-                        <span class="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center justify-center font-black text-sm">3</span>
+                <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
+                    <div class="flex items-center gap-2.5 mb-2">
+                        <span class="w-7 h-7 rounded-xl bg-blue-50 text-blue-700 border border-blue-200 flex items-center justify-center font-black text-xs">2</span>
                         <div>
-                            <h4 class="font-bold text-slate-900 text-sm">مدير النظام (Super User)</h4>
-                            <p class="text-[11px] text-slate-500">المستوى الشامل</p>
+                            <h4 class="font-bold text-slate-900 text-xs">مشرف (Admin)</h4>
+                            <p class="text-[10px] text-slate-500">المستوى الثاني</p>
                         </div>
                     </div>
-                    <p class="text-xs text-slate-600 leading-relaxed">كامل الصلاحيات: لوحة المراقبة، قطع التذاكر، الدخول، إعداد العروض، التدقيق، وإدارة المستخدمين.</p>
+                    <p class="text-[11px] text-slate-600 leading-relaxed">صلاحية تشمل <strong>لوحة المراقبة</strong>، <strong>قطع التذاكر</strong>، <strong>بوابة الدخول</strong>، و<strong>سجلات التدقيق</strong>.</p>
+                </div>
+                <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
+                    <div class="flex items-center gap-2.5 mb-2">
+                        <span class="w-7 h-7 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center justify-center font-black text-xs">3</span>
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-xs">مدير النظام (Superuser)</h4>
+                            <p class="text-[10px] text-slate-500">المستوى الشامل</p>
+                        </div>
+                    </div>
+                    <p class="text-[11px] text-slate-600 leading-relaxed">كامل الصلاحيات: لوحة المراقبة، إعداد العروض، التحكم بعروض البوابة، تعديل المقاعد، والتحكم بالحسابات.</p>
                 </div>
             </div>
 
