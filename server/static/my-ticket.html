@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تذكرتي - كنيسة مارمرقس بمصر الجديدة</title>
+    <!-- Favicon (Neiruz Logo) -->
+    <link rel="icon" type="image/png" href="/Theater Logo.png">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            900: '#14532d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Cairo -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Embedded Zone Graphics and Logos for 100% Offline Resilience -->
+    <script src="/zone_images.js"></script>
+    <!-- html2canvas for High-Res PNG Generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #f8fafc;
+            color: #0f172a;
+        }
+
+        /* Digital Ticket Card Styles */
+        .digital-ticket-container {
+            width: 100%;
+            max-width: 380px;
+            margin: 0 auto;
+            background: #ffffff;
+            color: #000000;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.15);
+            padding: 24px 20px 20px 20px;
+            box-sizing: border-box;
+            direction: rtl;
+            text-align: center;
+            border: 1px solid #cbd5e1;
+            position: relative;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between bg-slate-100/70 selection:bg-emerald-500 selection:text-white">
+
+    <!-- Top Public Header (Light) -->
+    <header class="border-b border-slate-200 bg-white/90 backdrop-blur sticky top-0 z-40 shadow-sm no-print">
+        <div class="max-w-5xl mx-auto px-4 py-3.5 flex justify-between items-center">
+            <!-- Right (RTL Start): St. Markos Logo + Brand Info -->
+            <div class="flex items-center gap-3">
+                <img src="/st markos-01.png" alt="كنيسة مارمرقس" class="h-16 sm:h-20 w-auto object-contain">
+                <div>
+                    <h1 class="text-sm sm:text-base font-black tracking-tight text-slate-900 flex items-center gap-1.5">
+                        كنيسة مارمرقس بمصر الجديدة <span class="text-[10px] bg-emerald-100 text-emerald-800 border border-emerald-300 px-2 py-0.5 rounded-full font-bold">بوابة التذاكر</span>
+                    </h1>
+                    <p class="text-[10px] text-slate-500 font-medium">عيد النيروز 1744 - نيروز 2026</p>
+                </div>
+            </div>
+
+            <!-- Left (RTL End): Neiruz Logo & Logout Button -->
+            <div class="flex items-center gap-3">
+                <div id="header-auth-badge" class="hidden">
+                    <button onclick="logoutTicket()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 border border-slate-300">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i> خروج
+                    </button>
+                </div>
+                <img src="/Theater Logo.png" alt="مسرح النيروز" class="h-12 sm:h-16 w-auto object-contain">
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow flex items-center justify-center p-4 sm:p-6">
+        <div class="w-full max-w-lg">
+
+            <!-- ==================== VIEW 1: LOGIN FORM (Light) ==================== -->
+            <div id="view-login" class="bg-white border border-slate-200/90 rounded-3xl p-6 sm:p-8 shadow-xl shadow-slate-200/60 space-y-6">
+                <div class="text-center space-y-2">
+                    <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-200 mb-2">
+                        <i class="fa-solid fa-cloud-arrow-down text-3xl"></i>
+                    </div>
+                    <h2 class="text-2xl font-black text-slate-900">تحميل صورة من تذكرتك</h2>
+                    <p class="text-xs text-slate-500 max-w-sm mx-auto">أدخل بيانات الدخول المطبوعة أسفل تذكرتك الورقية لعرض وتحميل صورة التذكرة الأصلية</p>
+                </div>
+
+                <form id="ticket-login-form" onsubmit="handleTicketLogin(event)" class="space-y-4">
+                    <!-- Error Alert -->
+                    <div id="login-error-box" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-2xl text-xs flex items-center gap-2.5">
+                        <i class="fa-solid fa-circle-exclamation text-base text-red-500 flex-shrink-0"></i>
+                        <span id="login-error-msg">بيانات الدخول غير صحيحة</span>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">
+                            <i class="fa-solid fa-hashtag text-emerald-600"></i> اسم المستخدم (أرقام التذكرة فقط)
+                        </label>
+                        <input type="text" id="input-username" required dir="ltr" style="direction: ltr !important; text-align: left !important; unicode-bidi: isolate !important;"
+                            class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3.5 text-slate-900 font-mono text-base tracking-wider focus:bg-white focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20 transition text-left">
+                        <p class="text-[10px] text-slate-400 mt-1">الأرقام المطبوعة على التذكرة (بدون حرف المنطقة أو المسافات)</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">
+                            <i class="fa-solid fa-key text-blue-600"></i> كلمة المرور (الرمز المطبوع أسفل التذكرة)
+                        </label>
+                        <input type="text" id="input-passcode" required dir="ltr" style="direction: ltr !important; text-align: left !important; unicode-bidi: isolate !important;"
+                            class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3.5 text-slate-900 font-mono text-base uppercase tracking-widest focus:bg-white focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition text-left">
+                        <p class="text-[10px] text-slate-400 mt-1">الرمز المكتوب بجوار «كلمة المرور» في أسفل التذكرة</p>
+                    </div>
+
+                    <button type="submit" id="btn-submit-login" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-4 rounded-xl transition shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2 text-base">
+                        <span>عرض وتحميل التذكرة</span>
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+                </form>
+
+                <!-- Help Box -->
+                <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-xs text-slate-600 space-y-1.5">
+                    <p class="font-bold text-slate-800 flex items-center gap-1.5">
+                        <i class="fa-solid fa-circle-question text-emerald-600"></i> أين أجد بيانات الدخول؟
+                    </p>
+                    <p class="text-[11px] leading-relaxed">
+                        ستجد في أسفل التذكرة الورقية المطبوعة قسماً يحتوي على:
+                        <br>• <strong>اسم المستخدم:</strong> الأرقام المكونة لرقم التذكرة (مثل 111005).
+                        <br>• <strong>كلمة المرور:</strong> الرمز السري التلقائي (مثل A8K3P9).
+                    </p>
+                </div>
+            </div>
+
+
+            <!-- ==================== VIEW 2: DIGITAL TICKET & DOWNLOAD (Light) ==================== -->
+            <div id="view-ticket" class="hidden space-y-4">
+
+                <!-- Actions Bar (Light Compact Container) -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-2 shadow-md flex justify-center items-center gap-2 max-w-[380px] mx-auto no-print">
+                    <button onclick="downloadTicketAsPng()" id="btn-download-png" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white px-3.5 py-2.5 rounded-xl font-bold text-xs transition flex items-center justify-center gap-1.5 shadow-md shadow-emerald-500/20">
+                        <i class="fa-solid fa-download text-xs"></i> تحميل التذكرة كصورة (PNG)
+                    </button>
+                    <button onclick="logoutTicket()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3.5 py-2.5 rounded-xl font-bold text-xs transition flex items-center justify-center gap-1.5 border border-slate-200">
+                        <i class="fa-solid fa-rotate-left text-xs"></i> تذكرة أخرى
+                    </button>
+                </div>
+
+                <!-- Printable / Downloadable Digital Ticket Container -->
+                <div id="digital-ticket-render" class="digital-ticket-container animate-fade-in">
+                    <!-- Top Logos Header -->
+                    <div class="flex justify-between items-center pb-2 mb-2 border-b border-black">
+                        <div class="w-[26%] flex justify-center items-center translate-x-[15px]">
+                            <img id="dt-logo-stmarkos" src="/st markos-01.png" alt="كنيسة مارمرقس" class="max-h-28 w-auto object-contain">
+                        </div>
+                        <div class="w-[50%] text-center text-black px-1">
+                            <p class="text-[13.5px] font-black leading-tight mb-1 text-black" style="font-family: 'Cairo', sans-serif;">كنيسة مارمرقس القبطية<br>الارثوذوكسية بمصر الجديدة</p>
+                            <p class="text-[12.5px] font-bold text-gray-800 leading-tight" style="font-family: 'Cairo', sans-serif;">عيد النيروز لعام 1744 للشهداء<br>نيروز 2026</p>
+                        </div>
+                        <div class="w-[24%] flex justify-center items-center -translate-x-[10px]">
+                            <img id="dt-logo-theater" src="/Theater Logo.png" alt="شعار المسرح" class="max-h-16 w-auto object-contain">
+                        </div>
+                    </div>
+
+                    <!-- Show Title -->
+                    <h2 id="dt-show-name" class="text-base font-black text-black mb-1 border-b border-black pb-1.5">اسم العرض المسرحي</h2>
+                    
+                    <!-- Date & Time -->
+                    <p id="dt-date-time" class="text-xs font-bold text-gray-900 mb-2">التاريخ والوقت</p>
+
+                    <!-- Ticket ID Badge -->
+                    <div class="my-2">
+                        <span id="dt-ticket-id" class="text-2xl font-black bg-black text-white px-5 py-1.5 rounded-md inline-block font-mono tracking-widest shadow">
+                            A - 111001
+                        </span>
+                    </div>
+
+                    <!-- Barcode SVG -->
+                    <div id="dt-barcode-box" class="my-3 flex justify-center items-center"></div>
+
+                    <!-- Zone Artwork Image -->
+                    <div class="my-2 flex justify-center items-center">
+                        <img id="dt-zone-img" src="/zone A.png" alt="Zone Image" class="max-w-[195px] max-h-[110px] object-contain rounded">
+                    </div>
+
+                    <!-- Footer Access Info -->
+                    <div class="mt-2.5 pt-2 border-t border-dashed border-black text-center">
+                        <p class="text-[9px] font-bold text-gray-800 mb-1 leading-snug" style="font-family: 'Cairo', sans-serif;">
+                            صور الكود او افتح <span class="font-mono text-emerald-800 font-extrabold" dir="ltr">neiruz.stmarkos.org</span> عشان تحمل نسخة من التذكرة
+                        </p>
+                        <p class="text-[9.5px] text-gray-900 font-mono mb-1.5">
+                            User: <strong id="dt-user-digits" class="text-black font-extrabold">111001</strong> &nbsp;|&nbsp; Pass: <strong id="dt-user-passcode" class="text-black font-extrabold">------</strong>
+                        </p>
+                        <div class="mt-1 flex justify-center items-center">
+                            <img id="dt-qr-img" src="/qrcode_neiruz.stmarkos.org.png" alt="QR Code" class="w-24 h-24 object-contain">
+                        </div>
+                        <p class="text-[8.5px] font-bold text-gray-800 mt-2 pt-1.5 border-t border-gray-200 leading-tight" style="font-family: 'Cairo', sans-serif;">
+                            رقم التذكرة يستخدم في الدخول مرة واحدة فقط<br>سواء الكترونية او ورقية
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Guidance Note -->
+                <p class="text-center text-xs text-slate-500 no-print">
+                    💡 يمكنك إظهار هذه التذكرة الرقمية على شاشة هاتفك عند بوابة الدخول لمسح الباركود مباشرة
+                </p>
+
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-200 py-4 text-center text-xs text-slate-500 bg-white/70 no-print">
+        جميع الحقوق محفوظة &copy; 2026 كنيسة مارمرقس بمصر الجديدة - نيروز 2026
+    </footer>
+
+    <!-- Client Logic -->
+    <script>
+        // Days helper
+        function getArabicDayOfWeek(dateStr) {
+            if (!dateStr) return '';
+            const parts = dateStr.split('-');
+            if (parts.length !== 3) return '';
+            const dateObj = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+            const days = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+            return isNaN(dateObj.getDay()) ? '' : days[dateObj.getDay()];
+        }
+
+        function formatTime12H(timeStr) {
+            if (!timeStr) return '';
+            const clean = timeStr.toString().trim();
+            if (clean.includes('م') || clean.includes('ص') || clean.includes('AM') || clean.includes('PM')) {
+                return clean;
+            }
+            const parts = clean.split(':');
+            if (parts.length >= 2) {
+                let h = parseInt(parts[0]);
+                const m = parts[1].padStart(2, '0');
+                const period = h >= 12 ? 'م' : 'ص';
+                h = h % 12;
+                if (h === 0) h = 12;
+                return `${h}:${m} ${period}`;
+            }
+            return clean;
+        }
+
+        function formatShowTimeRange(startTime, endTime) {
+            const s = formatTime12H(startTime);
+            const e = formatTime12H(endTime);
+            if (s && e) {
+                return `من ${s} إلى ${e}`;
+            }
+            return s || e || '';
+        }
+
+        // Generate barcode SVG
+        function generateBarcodeSvg(text) {
+            const clean = text.replace(/[^A-Za-z0-9]/g, '');
+            const encoded = clean ? clean : text;
+            const patterns = {
+                '0': '10100110110', '1': '11010010110', '2': '10110010110', '3': '11011001010',
+                '4': '10100110011', '5': '11010011001', '6': '10110011001', '7': '10100101100',
+                '8': '11010010100', '9': '10110010100', 'A': '11010100110', 'B': '10110100110',
+                'C': '11011010010', 'D': '10101100110', 'E': '11010110010', 'F': '10110110010',
+                'G': '10100101110', 'H': '11010010110', 'I': '10110010110', 'J': '10100110110',
+                'K': '11010101001', 'L': '10110101001', 'M': '11011010100', 'N': '10101101001',
+                'O': '11010110100', 'P': '10110110100', 'Q': '10100101101', 'R': '11010010101',
+                'S': '10110010101', 'T': '10100110101', 'U': '11001010110', 'V': '10011010110',
+                'W': '11001101010', 'X': '10010110110', 'Y': '11001011010', 'Z': '10011011010',
+                '-': '10010101100'
+            };
+            
+            let binary = '11010010000'; // Start code
+            for (let i = 0; i < encoded.length; i++) {
+                const char = encoded[i].toUpperCase();
+                binary += patterns[char] || '10100110110';
+            }
+            binary += '1100011101011'; // Stop pattern
+            
+            let rects = '';
+            let currentX = 0;
+            const barWidth = 2;
+            const barHeight = 44;
+            
+            for (let i = 0; i < binary.length; i++) {
+                if (binary[i] === '1') {
+                    rects += `<rect x="${currentX}" y="0" width="${barWidth}" height="${barHeight}" fill="#000" />`;
+                }
+                currentX += barWidth;
+            }
+            
+            return `
+                <svg width="${currentX}" height="${barHeight}" viewBox="0 0 ${currentX} ${barHeight}" xmlns="http://www.w3.org/2000/svg">
+                    ${rects}
+                </svg>
+            `;
+        }
+
+        let currentDigitalTicket = null;
+
+        function handleTicketLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById('input-username').value.trim();
+            const passcode = document.getElementById('input-passcode').value.trim();
+            const errorBox = document.getElementById('login-error-box');
+            const errorMsg = document.getElementById('login-error-msg');
+            const submitBtn = document.getElementById('btn-submit-login');
+
+            if (!username || !passcode) return;
+
+            errorBox.classList.add('hidden');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري التحقق من التذكرة...`;
+
+            fetch('/api/user/ticket-login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    ticketDigits: username,
+                    passcode: passcode
+                })
+            })
+            .then(res => {
+                if (!res.ok) {
+                    return res.json().then(err => { throw new Error(err.error || 'بيانات الدخول غير صحيحة') });
+                }
+                return res.json();
+            })
+            .then(data => {
+                if (data.success && data.ticket) {
+                    currentDigitalTicket = data.ticket;
+                    renderDigitalTicket(data.ticket);
+                } else {
+                    throw new Error(data.error || 'لم يتم العثور على التذكرة');
+                }
+            })
+            .catch(err => {
+                errorMsg.innerText = err.message;
+                errorBox.classList.remove('hidden');
+            })
+            .finally(() => {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = `<span>عرض وتحميل التذكرة</span> <i class="fa-solid fa-arrow-left"></i>`;
+            });
+        }
+
+        function renderDigitalTicket(ticket) {
+            // Fill content
+            document.getElementById('dt-show-name').innerText = ticket.showName;
+            document.getElementById('dt-date-time').innerText = `${getArabicDayOfWeek(ticket.showDate)} ${ticket.showDate} - ${formatShowTimeRange(ticket.showTime, ticket.showEndTime)}`;
+            document.getElementById('dt-ticket-id').innerText = ticket.ticketId;
+            document.getElementById('dt-user-digits').innerText = ticket.ticketDigits;
+            document.getElementById('dt-user-passcode').innerText = ticket.passcode;
+
+            // Barcode
+            document.getElementById('dt-barcode-box').innerHTML = generateBarcodeSvg(ticket.ticketId);
+
+            // Zone Image
+            const zKey = (ticket.zoneName || 'A').toString().trim().toUpperCase().charAt(0);
+            const zoneImgEl = document.getElementById('dt-zone-img');
+            if (zoneImgEl) {
+                zoneImgEl.src = (typeof ZONE_IMAGES !== 'undefined' && ZONE_IMAGES[zKey]) ? ZONE_IMAGES[zKey] : `/zone ${zKey}.png`;
+            }
+
+            // Logos & QR
+            const stMarkosEl = document.getElementById('dt-logo-stmarkos');
+            const theaterEl = document.getElementById('dt-logo-theater');
+            const qrEl = document.getElementById('dt-qr-img');
+            if (stMarkosEl && typeof LOGO_ST_MARKOS !== 'undefined') stMarkosEl.src = LOGO_ST_MARKOS;
+            if (theaterEl && typeof LOGO_THEATER !== 'undefined') theaterEl.src = LOGO_THEATER;
+            if (qrEl && typeof QR_CODE_PLACEHOLDER !== 'undefined') qrEl.src = QR_CODE_PLACEHOLDER;
+
+            // Switch views
+            document.getElementById('view-login').classList.add('hidden');
+            document.getElementById('view-ticket').classList.remove('hidden');
+            document.getElementById('header-auth-badge').classList.remove('hidden');
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function downloadTicketAsPng() {
+            const ticketEl = document.getElementById('digital-ticket-render');
+            const btn = document.getElementById('btn-download-png');
+            if (!ticketEl) return;
+
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري إنشاء وتحميل الصورة...`;
+            }
+
+            const ticketId = (currentDigitalTicket && currentDigitalTicket.ticketId) 
+                ? currentDigitalTicket.ticketId.replace(/[^A-Za-z0-9]/g, '_') 
+                : 'ticket';
+            const fileName = `Ticket_${ticketId}.png`;
+
+            if (typeof html2canvas !== 'undefined') {
+                html2canvas(ticketEl, {
+                    scale: 3, // Crisp high-DPI rendering
+                    useCORS: true,
+                    backgroundColor: '#ffffff',
+                    logging: false
+                }).then(canvas => {
+                    const imageUri = canvas.toDataURL('image/png');
+                    const link = document.createElement('a');
+                    link.download = fileName;
+                    link.href = imageUri;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }).catch(err => {
+                    console.error("Error generating ticket PNG:", err);
+                    alert("حدث خطأ أثناء تحميل الصورة: " + err.message);
+                }).finally(() => {
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.innerHTML = `<i class="fa-solid fa-download"></i> تحميل التذكرة كصورة (PNG)`;
+                    }
+                });
+            } else {
+                alert("لم يتم تحميل مكتبة إنشاء الصور، يرجى المحاولة لاحقاً");
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = `<i class="fa-solid fa-download"></i> تحميل التذكرة كصورة (PNG)`;
+                }
+            }
+        }
+
+        function logoutTicket() {
+            currentDigitalTicket = null;
+            document.getElementById('input-username').value = '';
+            document.getElementById('input-passcode').value = '';
+            document.getElementById('login-error-box').classList.add('hidden');
+            
+            document.getElementById('view-ticket').classList.add('hidden');
+            document.getElementById('header-auth-badge').classList.add('hidden');
+            document.getElementById('view-login').classList.remove('hidden');
+        }
+
+        // Auto login if query parameters are present in URL: ?user=113005&pass=X7K2M9
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const user = urlParams.get('user') || urlParams.get('username') || urlParams.get('ticket');
+            const pass = urlParams.get('pass') || urlParams.get('password') || urlParams.get('code');
+            if (user && pass) {
+                document.getElementById('input-username').value = user;
+                document.getElementById('input-passcode').value = pass;
+                document.getElementById('ticket-login-form').dispatchEvent(new Event('submit'));
+            }
+        });
+    </script>
+</body>
+</html>

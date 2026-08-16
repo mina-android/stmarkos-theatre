@@ -1,0 +1,12 @@
+{
+  "name": "theatre-ticketing-client",
+  "version": "1.0.0",
+  "description": "Electron client wrapper for silent printing in Theater Ticketing System",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "dependencies": {
+    "electron": "^31.0.0"
+  }
+}

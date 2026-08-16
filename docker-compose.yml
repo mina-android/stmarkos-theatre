@@ -1,0 +1,51 @@
+﻿services:
+
+  db:
+    image: postgres:16-alpine
+    container_name: theatre_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: theatre_tickets
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d theatre_tickets"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./db/schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+    networks:
+      - theatre_net
+
+  app:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: theatre_app
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_DATABASE: theatre_tickets
+      PORT: 5000
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      # Mount static folder so assets can be updated without rebuilding the image
+      - ./server/static:/app/static:ro
+    networks:
+      - theatre_net
+
+volumes:
+  postgres_data:
+
+networks:
+  theatre_net:
+    driver: bridge

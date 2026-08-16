@@ -1,0 +1,3042 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>كنيسة مارمرقس بمصر الجديدة - نيروز 2026</title>
+    <!-- Favicon (Neiruz Logo) -->
+    <link rel="icon" type="image/png" href="/Theater Logo.png">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts (Cairo) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Embedded Base64 Zone Images for instant offline printing -->
+    <script src="/zone_images.js"></script>
+    
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #f8fafc;
+            color: #0f172a;
+        }
+        .nav-active {
+            border-bottom: 3px solid #3b82f6;
+            color: #3b82f6;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #334155;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col bg-slate-100/70 text-slate-800 selection:bg-blue-500 selection:text-white">
+
+    <!-- ==================== VIEW 1: AUTH LOGIN VIEW ==================== -->
+    <div id="auth-view" class="min-h-screen flex items-center justify-center p-4 bg-slate-100/70">
+        <div class="w-full max-w-md bg-white border border-slate-200/90 rounded-3xl p-8 shadow-2xl space-y-6">
+            <div class="flex justify-between items-center pb-4 border-b border-slate-100">
+                <img src="/st markos-01.png" alt="كنيسة مارمرقس" class="h-16 w-auto object-contain">
+                <img src="/Theater Logo.png" alt="مسرح النيروز" class="h-12 w-auto object-contain">
+            </div>
+
+            <div class="text-center space-y-1">
+                <h2 class="text-2xl font-black text-slate-900">تسجيل الدخول للنظام</h2>
+                <p class="text-xs text-slate-500">نظام إدارة وقطع تذاكر مسرح النيروز</p>
+            </div>
+
+            <form id="app-login-form" onsubmit="handleAppLogin(event)" class="space-y-4">
+                <div id="auth-error-box" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-2xl text-xs flex items-center gap-2">
+                    <i class="fa-solid fa-circle-exclamation text-red-500 text-sm"></i>
+                    <span id="auth-error-msg">بيانات الدخول غير صحيحة</span>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1.5">
+                        <i class="fa-solid fa-user text-slate-600"></i> اسم المستخدم
+                    </label>
+                    <input type="text" id="login-username" required autocomplete="username" dir="ltr" style="direction: ltr !important; text-align: left !important; unicode-bidi: isolate !important;"
+                        class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3.5 text-slate-900 font-bold focus:bg-white focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition text-left">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1.5">
+                        <i class="fa-solid fa-lock text-slate-600"></i> كلمة المرور
+                    </label>
+                    <input type="password" id="login-password" required autocomplete="current-password" dir="ltr" style="direction: ltr !important; text-align: left !important; unicode-bidi: isolate !important;"
+                        class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3.5 text-slate-900 font-bold focus:bg-white focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition text-left">
+                </div>
+
+                <button type="submit" id="btn-login-submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3.5 rounded-xl transition shadow-lg shadow-blue-500/20 flex items-center justify-center gap-2 text-base">
+                    <span>دخول للنظام</span>
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==================== VIEW 2: MAIN APPLICATION VIEW ==================== -->
+    <div id="app-view" class="hidden min-h-screen flex flex-col justify-between">
+        <!-- Header -->
+        <header class="bg-white/90 border-b border-slate-200 shadow-sm sticky top-0 z-50 backdrop-blur">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-24">
+                    <!-- Right: St. Markos Logo & Brand Title -->
+                    <div class="flex items-center space-x-3.5 space-x-reverse">
+                        <img src="/st markos-01.png" alt="كنيسة مارمرقس" class="h-20 w-auto object-contain">
+                        <div>
+                            <h1 class="text-xl sm:text-2xl font-black tracking-tight text-slate-900">كنيسة مارمرقس بمصر الجديدة</h1>
+                            <p class="text-xs text-slate-500 font-medium">عيد النيروز 1744 - نيروز 2026</p>
+                        </div>
+                    </div>
+
+                    <!-- Navigation Menu Dropdown Button -->
+                    <div class="relative" id="main-nav-container">
+                        <button id="btn-nav-menu" onclick="toggleNavMenu(event)" 
+                            class="flex items-center gap-3 bg-white hover:bg-slate-50 text-black px-4 py-2.5 rounded-2xl border border-slate-300 shadow-sm transition duration-200 text-sm font-bold active:scale-95">
+                            <i class="fa-solid fa-bars text-black text-base"></i>
+                            <span id="current-tab-label" class="text-black">لوحة المراقبة</span>
+                            <i class="fa-solid fa-chevron-down text-xs text-black transition-transform duration-200" id="nav-menu-chevron"></i>
+                        </button>
+
+                        <!-- Dropdown Menu -->
+                        <div id="nav-dropdown-menu" class="hidden absolute right-0 mt-2 w-64 bg-white border border-slate-200 rounded-2xl shadow-2xl z-50 p-2 space-y-1 backdrop-blur-xl">
+                            <button onclick="selectNavTab('dashboard')" id="tab-dashboard" 
+                                class="w-full text-right px-3.5 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-between group bg-slate-100 text-black border border-slate-300">
+                                <div class="flex items-center gap-2.5">
+                                    <i class="fa-solid fa-chart-line text-sm w-5 text-center text-black"></i>
+                                    <span class="text-black">لوحة المراقبة</span>
+                                </div>
+                                <span class="nav-active-dot w-2 h-2 rounded-full bg-black"></span>
+                            </button>
+
+                            <button onclick="selectNavTab('print')" id="tab-print" 
+                                class="w-full text-right px-3.5 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-between text-black hover:bg-slate-100 hover:text-black">
+                                <div class="flex items-center gap-2.5">
+                                    <i class="fa-solid fa-print text-sm w-5 text-center text-black"></i>
+                                    <span class="text-black">بوابة قطع التذاكر</span>
+                                </div>
+                                <span class="nav-active-dot hidden w-2 h-2 rounded-full bg-black"></span>
+                            </button>
+
+                            <button onclick="selectNavTab('gate')" id="tab-gate" 
+                                class="w-full text-right px-3.5 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-between text-black hover:bg-slate-100 hover:text-black">
+                                <div class="flex items-center gap-2.5">
+                                    <i class="fa-solid fa-door-open text-sm w-5 text-center text-black"></i>
+                                    <span class="text-black">بوابة الدخول والتحقق</span>
+                                </div>
+                                <span class="nav-active-dot hidden w-2 h-2 rounded-full bg-black"></span>
+                            </button>
+
+                            <button onclick="selectNavTab('setup')" id="tab-setup" 
+                                class="w-full text-right px-3.5 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-between text-black hover:bg-slate-100 hover:text-black">
+                                <div class="flex items-center gap-2.5">
+                                    <i class="fa-solid fa-sliders text-sm w-5 text-center text-black"></i>
+                                    <span class="text-black">إعداد عرض جديد</span>
+                                </div>
+                                <span class="nav-active-dot hidden w-2 h-2 rounded-full bg-black"></span>
+                            </button>
+
+                            <button onclick="selectNavTab('audit')" id="tab-audit" 
+                                class="w-full text-right px-3.5 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-between text-black hover:bg-slate-100 hover:text-black">
+                                <div class="flex items-center gap-2.5">
+                                    <i class="fa-solid fa-list-check text-sm w-5 text-center text-black"></i>
+                                    <span class="text-black">السجلات والتدقيق</span>
+                                </div>
+                                <span class="nav-active-dot hidden w-2 h-2 rounded-full bg-black"></span>
+                            </button>
+
+                            <button onclick="selectNavTab('users')" id="tab-users" 
+                                class="w-full text-right px-3.5 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-between text-black hover:bg-slate-100 hover:text-black">
+                                <div class="flex items-center gap-2.5">
+                                    <i class="fa-solid fa-users-gear text-sm w-5 text-center text-black"></i>
+                                    <span class="text-black">إدارة المستخدمين</span>
+                                </div>
+                                <span class="nav-active-dot hidden w-2 h-2 rounded-full bg-black"></span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Left: Device + Logout -->
+                    <div class="flex items-center gap-3 sm:gap-4">
+                        <!-- Device Info (Desktop) -->
+                        <div class="hidden xl:flex items-center gap-2.5 bg-slate-100/90 px-3 py-1.5 rounded-xl border border-slate-200 text-xs">
+                            <i class="fa-solid fa-display text-black"></i>
+                            <div class="text-right">
+                                <p id="device-display-name" class="font-bold text-black text-[11px] leading-tight">تحميل الجهاز...</p>
+                                <p id="device-display-uuid" class="text-[9px] text-slate-500 font-mono leading-none">UUID: -</p>
+                            </div>
+                            <button onclick="triggerDeviceConfigModal()" class="text-black hover:text-slate-700 transition-colors text-[10px] px-1.5 py-0.5 rounded bg-slate-200 font-bold">تعديل</button>
+                        </div>
+
+                        <!-- Logout Button -->
+                        <button onclick="handleLogout()" class="bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 px-3 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm" title="تسجيل الخروج">
+                            <i class="fa-solid fa-arrow-right-from-bracket"></i> <span class="hidden md:inline">خروج</span>
+                        </button>
+
+                        <img src="/Theater Logo.png" alt="مسرح النيروز" class="h-14 w-auto object-contain hidden sm:block">
+                    </div>
+                </div>
+            </div>
+        </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- ==================== DASHBOARD PANEL ==================== -->
+        <section id="panel-dashboard" class="hidden space-y-6">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-900">لوحة المراقبة الفورية</h2>
+                    <p class="text-sm text-slate-500">مراقبة سعة المقاعد والامتلاء لجميع العروض النشطة</p>
+                </div>
+                <div class="flex flex-wrap items-center gap-3">
+                    <button id="btn-refill-all-seats" onclick="triggerRefillAllSeats()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2.5 rounded-xl transition flex items-center gap-2 text-sm font-bold shadow-md shadow-emerald-500/20">
+                        <i class="fa-solid fa-arrows-rotate"></i> إعادة ملء جميع المقاعد
+                    </button>
+                    <button onclick="fetchShows()" class="bg-white hover:bg-slate-50 text-slate-700 px-4 py-2.5 rounded-xl border border-slate-300 transition flex items-center gap-2 text-sm shadow-sm font-medium">
+                        <i class="fa-solid fa-rotate"></i> تحديث فوري
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats Overview Cards -->
+            <!-- Stats Overview Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white border border-slate-200/90 rounded-2xl p-6 shadow-sm flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-semibold text-slate-500">إجمالي العروض</p>
+                        <h3 id="stat-shows-count" class="text-3xl font-extrabold text-slate-900 mt-1">0</h3>
+                    </div>
+                    <div class="bg-blue-50 p-4 rounded-xl text-blue-600 border border-blue-100">
+                        <i class="fa-solid fa-calendar-days text-2xl"></i>
+                    </div>
+                </div>
+                <div class="bg-white border border-slate-200/90 rounded-2xl p-6 shadow-sm flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-semibold text-slate-500">المقاعد المتاحة (الكل)</p>
+                        <h3 id="stat-seats-avail" class="text-3xl font-extrabold text-emerald-600 mt-1">0</h3>
+                    </div>
+                    <div class="bg-emerald-50 p-4 rounded-xl text-emerald-600 border border-emerald-100">
+                        <i class="fa-solid fa-chair text-2xl"></i>
+                    </div>
+                </div>
+                <div class="bg-white border border-slate-200/90 rounded-2xl p-6 shadow-sm flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-semibold text-slate-500">تذاكر تم طباعتها</p>
+                        <h3 id="stat-tickets-printed" class="text-3xl font-extrabold text-amber-600 mt-1">0</h3>
+                    </div>
+                    <div class="bg-amber-50 p-4 rounded-xl text-amber-600 border border-amber-100">
+                        <i class="fa-solid fa-receipt text-2xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Shows Grid / List -->
+            <div id="shows-list-container" class="grid grid-cols-1 gap-6">
+                <!-- Loaded dynamically -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-8 text-center text-slate-500 shadow-sm">
+                    <i class="fa-solid fa-spinner fa-spin text-3xl mb-3 text-blue-600"></i>
+                    <p>جاري تحميل العروض المتوفرة...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== PRINT TERMINAL PANEL ==================== -->
+        <section id="panel-print" class="hidden max-w-5xl mx-auto space-y-6">
+            <div class="bg-white border border-slate-200/90 rounded-3xl p-8 shadow-sm relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-24 h-24 bg-blue-600/5 rounded-full blur-2xl"></div>
+                
+                <h2 class="text-2xl font-bold text-slate-900 mb-2 flex items-center gap-3">
+                    <i class="fa-solid fa-print text-black"></i> بوابة إصدار التذاكر الفوري
+                </h2>
+                <p class="text-sm text-slate-500 mb-6">حدد العرض والمنطقة للطباعة المباشرة بدون فواصل أو تأخير</p>
+
+                <!-- Form -->
+                <div class="space-y-6">
+                    <!-- Step 1: Select Show -->
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">العرض المسرحي النشط</label>
+                        <div id="print-shows-container" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                            <div class="col-span-2 sm:col-span-3 md:col-span-4 lg:col-span-5 text-center py-4 text-xs text-slate-500 bg-slate-50 rounded-xl border border-slate-200">
+                                جاري تحميل العروض...
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Select Zone -->
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">المنطقة / فئة الحضور</label>
+                        <div id="print-zone-grid" class="grid grid-cols-2 gap-4">
+                            <!-- Loaded dynamically -->
+                            <div class="col-span-2 text-center py-4 text-xs text-slate-500 bg-slate-50 rounded-xl border border-slate-200">
+                                يرجى اختيار العرض أولاً لرؤية المناطق المتاحة
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Select Ticket Quantity -->
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <label class="block text-sm font-semibold text-slate-700">عدد التذاكر المطلوب قطعها</label>
+                            <span id="ticket-count-badge" class="text-xs text-blue-700 font-bold bg-blue-50 px-2.5 py-0.5 rounded-full border border-blue-200">تذكرة واحدة</span>
+                        </div>
+                        <div class="flex items-center gap-3 bg-slate-50 p-2 rounded-xl border border-slate-300">
+                            <button type="button" onclick="adjustTicketCount(-1)" class="w-12 h-12 bg-white hover:bg-slate-100 text-slate-800 rounded-lg flex items-center justify-center font-bold text-xl transition active:scale-95 border border-slate-300 shadow-sm">
+                                <i class="fa-solid fa-minus text-sm"></i>
+                            </button>
+                            <input type="number" id="ticket-count-input" value="1" min="1" max="50" oninput="onTicketCountChange()" dir="ltr" class="w-full bg-transparent text-center text-xl font-extrabold text-slate-900 focus:outline-none" />
+                            <button type="button" onclick="adjustTicketCount(1)" class="w-12 h-12 bg-white hover:bg-slate-100 text-slate-800 rounded-lg flex items-center justify-center font-bold text-xl transition active:scale-95 border border-slate-300 shadow-sm">
+                                <i class="fa-solid fa-plus text-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Printer selection config link -->
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-barcode text-slate-500"></i>
+                            <div>
+                                <h4 class="text-xs font-semibold text-slate-800">طريقة الطباعة</h4>
+                                <p id="print-method-status" class="text-[10px] text-slate-500">جاري الكشف عن مشغل Electron...</p>
+                            </div>
+                        </div>
+                        <span id="print-badge" class="bg-slate-200 text-slate-700 border border-slate-300 text-xs px-2.5 py-1 rounded-lg font-bold">المتصفح (حوار افتراضي)</span>
+                    </div>
+
+                    <!-- Submit Print Button -->
+                    <button id="btn-issue-ticket" onclick="issueTicket()" disabled class="w-full bg-slate-200 text-slate-400 cursor-not-allowed font-bold py-4 rounded-xl transition-all duration-300 flex items-center justify-center gap-3 text-lg shadow-sm">
+                        <i class="fa-solid fa-circle-check text-xl"></i> طباعة التذكرة فوراً
+                    </button>
+                </div>
+            </div>
+
+            <!-- Ticket Preview Box -->
+            <div id="latest-ticket-preview-box" class="hidden bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 flex items-center justify-between">
+                    <span class="flex items-center gap-2"><i class="fa-solid fa-eye text-blue-400"></i> معاينة التذكرة</span>
+                    <span id="preview-status-badge" class="bg-blue-600/10 text-blue-400 border border-blue-500/25 text-[10px] px-2 py-0.5 rounded font-bold">معاينة قبل الطباعة</span>
+                </h4>
+                <div class="bg-white text-black p-5 rounded-xl shadow-inner font-mono max-w-sm mx-auto text-center border-2 border-dashed border-gray-300">
+                    <div class="flex justify-between items-center pb-2 mb-2 border-b border-gray-300">
+                        <div class="w-[26%] flex justify-center items-center translate-x-[15px]">
+                            <img src="/st markos-01.png" alt="St Markos" class="max-h-24 w-auto object-contain">
+                        </div>
+                        <div class="w-[50%] text-center text-gray-900 px-1">
+                            <p class="text-[14px] font-extrabold leading-tight mb-1" style="font-family: 'Cairo', sans-serif;">كنيسة مارمرقس القبطية<br>الارثوذوكسية بمصر الجديدة</p>
+                            <p class="text-[12.5px] font-bold text-gray-700 leading-tight" style="font-family: 'Cairo', sans-serif;">عيد النيروز لعام 1744 للشهداء<br>نيروز 2026</p>
+                        </div>
+                        <div class="w-[24%] flex justify-center items-center -translate-x-[10px]">
+                            <img src="/Theater Logo.png" alt="Theater Logo" class="max-h-12 w-auto object-contain">
+                        </div>
+                    </div>
+                    <p id="prev-show-name" class="font-extrabold text-lg border-b pb-2 mb-2">اسم العرض المسرحي</p>
+                    <p class="text-sm font-semibold mb-0" id="prev-date-time">التاريخ والوقت</p> <!-- Reset margin-bottom to 0 -->
+                    <p class="text-2xl font-bold bg-black text-white py-2 rounded mt-[15px]" id="prev-ticket-id">A - 111001</p> <!-- Exact 15px margin-top -->
+                    <div id="prev-barcode-container" class="mt-2.5 flex justify-center"></div>
+                    <div id="prev-zone-img-container" class="mt-2 flex justify-center">
+                        <img id="prev-zone-img" src="/zone A.png" alt="Zone Image" class="max-w-[185px] max-h-[105px] object-contain rounded">
+                    </div>
+                    <div id="prev-credentials-container" class="mt-2.5 pt-2 border-t border-dashed border-gray-400 text-center">
+                        <p class="text-[9px] font-bold text-gray-800 mb-1 leading-snug" style="font-family: 'Cairo', sans-serif;">
+                            صور الكود او افتح <span class="font-mono text-blue-700 font-extrabold dir-ltr inline-block">neiruz.stmarkos.org</span> عشان تحمل نسخة من التذكرة
+                        </p>
+                        <p class="text-[10px] text-gray-900 font-semibold font-sans">
+                            اسم المستخدم: <strong id="prev-user-digits" class="font-mono text-black font-extrabold">111001</strong> &nbsp;|&nbsp; كلمة المرور: <strong id="prev-user-passcode" class="font-mono text-blue-700 font-extrabold">------</strong>
+                        </p>
+                        <div class="mt-1.5 flex justify-center items-center">
+                            <img id="prev-qr-code-img" src="/qrcode_neiruz.stmarkos.org.png" alt="QR Code" class="w-24 h-24 object-contain">
+                        </div>
+                        <p class="text-[8.5px] font-bold text-gray-700 mt-2 pt-1.5 border-t border-gray-200 leading-tight" style="font-family: 'Cairo', sans-serif;">
+                            رقم التذكرة يستخدم في الدخول مرة واحدة فقط<br>سواء الكترونية او ورقية
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== ENTRANCE GATE PANEL ==================== -->
+        <section id="panel-gate" class="hidden space-y-6 max-w-5xl mx-auto">
+            <!-- Header & Stats Bar -->
+            <div class="bg-white border border-slate-200/90 rounded-3xl p-6 shadow-xl">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-200 pb-5">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-3">
+                            <i class="fa-solid fa-door-open text-black"></i> بوابة الدخول والتحقق من التذاكر
+                        </h2>
+                        <p class="text-sm text-slate-500">امسح الباركود أو أدخل رقم التذكرة للتحقق الفوري من صلاحية الدخول</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button onclick="toggleGateSound()" id="btn-gate-sound" class="bg-white hover:bg-slate-50 text-black border border-slate-300 px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 shadow-sm">
+                            <i id="gate-sound-icon" class="fa-solid fa-volume-high text-black"></i> <span id="gate-sound-text">الأصوات: مفعّلة</span>
+                        </button>
+                        <button onclick="fetchGateStats()" class="bg-white hover:bg-slate-50 text-black border border-slate-300 px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm">
+                            <i class="fa-solid fa-rotate text-black"></i> تحديث الإحصائيات
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Stats Summary Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-5">
+                    <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 flex items-center justify-between shadow-sm">
+                        <div>
+                            <p class="text-xs text-slate-500 font-semibold mb-1">اجمالي الحضور</p>
+                            <h3 id="gate-stat-entered" class="text-3xl font-black text-emerald-600">0</h3>
+                        </div>
+                        <div class="bg-emerald-50 p-3 rounded-xl text-emerald-600 border border-emerald-100">
+                            <i class="fa-solid fa-user-check text-2xl"></i>
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 flex items-center justify-between shadow-sm">
+                        <div>
+                            <p class="text-xs text-slate-500 font-semibold mb-1">إجمالي التذاكر المطبوعة</p>
+                            <h3 id="gate-stat-printed" class="text-3xl font-black text-blue-600">0</h3>
+                        </div>
+                        <div class="bg-blue-50 p-3 rounded-xl text-blue-600 border border-blue-100">
+                            <i class="fa-solid fa-ticket text-2xl"></i>
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 flex items-center justify-between shadow-sm">
+                        <div>
+                            <p class="text-xs text-slate-500 font-semibold mb-1">تذاكر لعروض أخرى</p>
+                            <h3 id="gate-stat-wrong-shows" class="text-3xl font-black text-indigo-600">0</h3>
+                        </div>
+                        <div class="bg-indigo-50 p-3 rounded-xl text-indigo-600 border border-indigo-100">
+                            <i class="fa-solid fa-calendar-xmark text-2xl"></i>
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 flex items-center justify-between shadow-sm">
+                        <div>
+                            <p class="text-xs text-slate-500 font-semibold mb-1">محاولات الدخول المكررة</p>
+                            <h3 id="gate-stat-duplicates" class="text-3xl font-black text-amber-600">0</h3>
+                        </div>
+                        <div class="bg-amber-50 p-3 rounded-xl text-amber-600 border border-amber-100">
+                            <i class="fa-solid fa-triangle-exclamation text-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gate Active Show Selector Bar -->
+            <div class="bg-white border border-slate-200/90 rounded-3xl p-5 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center border border-indigo-200 shadow-sm flex-shrink-0">
+                        <i class="fa-solid fa-masks-theater text-lg"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-black text-slate-900">العرض الحالي المطلوب مسح تذاكره عند البوابة</h4>
+                        <p class="text-xs text-slate-500">يتم التحقق من مطابقة موعد تذكرة الزائر مع هذا العرض لمنع الدخول في موعد غير مخصص له</p>
+                    </div>
+                </div>
+                <div class="w-full md:w-auto min-w-[320px]">
+                    <select id="gate-show-select" onchange="onGateShowChange()" class="w-full bg-slate-50 border-2 border-slate-300 focus:border-indigo-600 text-slate-900 rounded-xl px-3.5 py-2.5 text-sm font-bold focus:outline-none transition shadow-sm">
+                        <option value="" disabled selected>-- اختر العرض المسرحي المراد مسح تذاكره --</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Barcode Scanner Input Box -->
+            <div class="bg-white border border-slate-200/90 rounded-3xl p-6 shadow-sm">
+                <form onsubmit="handleGateScan(event)" class="relative flex flex-col sm:flex-row gap-3">
+                    <div class="relative flex-1">
+                        <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400">
+                            <i class="fa-solid fa-barcode text-2xl text-slate-600 animate-pulse"></i>
+                        </div>
+                        <input 
+                            type="text" 
+                            id="gate-code-input" 
+                            autocomplete="off" 
+                            dir="ltr"
+                            style="direction: ltr !important; text-align: left !important; unicode-bidi: isolate !important;"
+                            class="w-full bg-slate-50 border-2 border-slate-300 focus:border-emerald-600 text-slate-900 rounded-2xl pr-14 pl-12 py-4 text-lg font-mono focus:outline-none transition-all placeholder:text-slate-400 shadow-sm text-left"
+                        >
+                        <button 
+                            type="button" 
+                            onclick="clearGateInput()" 
+                            class="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-400 hover:text-slate-600 transition"
+                            title="مسح الحقل"
+                        >
+                            <i class="fa-solid fa-xmark text-lg"></i>
+                        </button>
+                    </div>
+                    <button 
+                        type="submit" 
+                        id="btn-gate-verify"
+                        class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-8 py-4 rounded-2xl transition shadow-md shadow-emerald-500/20 flex items-center justify-center gap-2 text-lg whitespace-nowrap"
+                    >
+                        <i class="fa-solid fa-check-double"></i> تحقق من الدخول
+                    </button>
+                </form>
+            </div>
+
+            <!-- Giant Hero Status Indicator -->
+            <div id="gate-hero-card" class="bg-white border-2 border-slate-200 rounded-3xl p-8 shadow-sm transition-all duration-300">
+                <div id="gate-hero-content" class="text-center py-10">
+                    <div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-slate-100 text-slate-600 mb-4 border border-slate-300 animate-bounce">
+                        <i class="fa-solid fa-barcode text-4xl text-slate-700"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-slate-900 mb-2">جاهز لمسح التذاكر</h3>
+                    <p class="text-slate-500 max-w-md mx-auto text-sm">قم بتوجيه قارئ الباركود نحو التذكرة المطبوعة أو أدخل الكود في الحقل أعلاه</p>
+                </div>
+            </div>
+
+            <!-- Recent Entrance Logs Feed -->
+            <div class="bg-white border border-slate-200/90 rounded-3xl p-6 shadow-sm">
+                <h3 class="text-lg font-bold text-slate-900 mb-4 flex items-center justify-between">
+                    <span class="flex items-center gap-2"><i class="fa-solid fa-clock-rotate-left text-slate-700"></i> آخر حركات الدخول المسجلة</span>
+                    <span class="text-xs text-slate-500 font-normal">تحديث مباشر وتلقائي</span>
+                </h3>
+                <div class="overflow-x-auto rounded-xl border border-slate-200">
+                    <table class="min-w-full divide-y divide-slate-200 text-right">
+                        <thead class="bg-slate-100 text-xs font-bold text-slate-600 uppercase">
+                            <tr>
+                                <th class="px-5 py-3">الحالة</th>
+                                <th class="px-5 py-3">رقم التذكرة</th>
+                                <th class="px-5 py-3">العرض المسرحي</th>
+                                <th class="px-5 py-3">المنطقة</th>
+                                <th class="px-5 py-3">وقت الدخول</th>
+                                <th class="px-5 py-3">الجهاز / البوابة</th>
+                            </tr>
+                        </thead>
+                        <tbody id="gate-recent-logs-body" class="divide-y divide-slate-100 text-sm font-medium text-slate-800">
+                            <tr>
+                                <td colspan="6" class="text-center py-6 text-slate-500">لا توجد عمليات دخول مسجلة حتى الآن</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SETUP SHOW PANEL ==================== -->
+        <section id="panel-setup" class="hidden max-w-3xl mx-auto space-y-6">
+            <div class="bg-white border border-slate-200/90 rounded-3xl p-8 shadow-sm">
+                <h2 class="text-2xl font-bold text-slate-900 mb-2 flex items-center gap-3">
+                    <i class="fa-solid fa-calendar-plus text-emerald-600"></i> تسجيل وإعداد عرض جديد
+                </h2>
+                <p class="text-sm text-slate-500 mb-6">سجل عرضاً مسرحياً جديداً وقم بتعيين السعة لكل فئة مقاعد</p>
+
+                <form onsubmit="handleCreateShow(event)" class="space-y-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+                        <div class="sm:col-span-2 md:col-span-2">
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">اسم العرض المسرحي</label>
+                            <input type="text" id="setup-name" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-slate-900 focus:bg-white focus:outline-none focus:border-emerald-600 transition">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">كود / بادئة العرض (Prefix)</label>
+                            <input type="text" id="setup-prefix" dir="ltr" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-slate-900 focus:bg-white focus:outline-none focus:border-emerald-600 transition text-left">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">تاريخ العرض</label>
+                            <input type="date" id="setup-date" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-slate-900 focus:bg-white focus:outline-none focus:border-emerald-600 transition">
+                        </div>
+
+                        <div class="sm:col-span-1 md:col-span-2">
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">وقت بدء العرض</label>
+                            <input type="time" id="setup-start-time" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-slate-900 focus:bg-white focus:outline-none focus:border-emerald-600 transition">
+                        </div>
+
+                        <div class="sm:col-span-1 md:col-span-2">
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">وقت انتهاء العرض</label>
+                            <input type="time" id="setup-end-time" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-slate-900 focus:bg-white focus:outline-none focus:border-emerald-600 transition">
+                        </div>
+                    </div>
+
+                    <div class="border-t border-slate-200 pt-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-bold text-slate-900">فئات ومناطق المقاعد</h3>
+                            <button type="button" onclick="addZoneRow()" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-300 px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition">
+                                <i class="fa-solid fa-plus"></i> إضافة منطقة
+                            </button>
+                        </div>
+
+                        <!-- Dynamic Zones Rows -->
+                        <div id="setup-zones-container" class="space-y-4">
+                            <!-- Default standard layout matches Excel zones -->
+                            <div class="zone-row grid grid-cols-1 sm:grid-cols-3 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">رمز المنطقة (مثال: A, B, C, D)</label>
+                                    <input type="text" value="A" required dir="ltr" class="zone-name w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 focus:outline-none focus:border-emerald-600 text-center">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">السعة الاستيعابية</label>
+                                    <input type="number" value="125" required min="1" dir="ltr" style="direction: ltr !important; text-align: left !important; unicode-bidi: isolate !important;" class="zone-capacity w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 focus:outline-none focus:border-emerald-600 text-left">
+                                </div>
+                                <div class="flex items-end">
+                                    <button type="button" onclick="removeZoneRow(this)" class="w-full bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 py-2 rounded-lg text-xs font-bold transition">حذف</button>
+                                </div>
+                            </div>
+
+                            <div class="zone-row grid grid-cols-1 sm:grid-cols-3 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">رمز المنطقة</label>
+                                    <input type="text" value="B" required dir="ltr" class="zone-name w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 focus:outline-none focus:border-emerald-600 text-center">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">السعة الاستيعابية</label>
+                                    <input type="number" value="20" required min="1" dir="ltr" style="direction: ltr !important; text-align: left !important; unicode-bidi: isolate !important;" class="zone-capacity w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 focus:outline-none focus:border-emerald-600 text-left">
+                                </div>
+                                <div class="flex items-end">
+                                    <button type="button" onclick="removeZoneRow(this)" class="w-full bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 py-2 rounded-lg text-xs font-bold transition">حذف</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3.5 rounded-xl transition shadow-md shadow-emerald-500/10">
+                        حفظ وتفعيل العرض بالجدول
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- ==================== AUDIT & LOGS PANEL ==================== -->
+        <section id="panel-audit" class="hidden space-y-6">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-900">سجلات النظام والتذاكر المطبوعة</h2>
+                    <p class="text-sm text-slate-500">سجل حركات الطباعة الفورية من جميع الأجهزة المتصلة للتدقيق والمتابعة</p>
+                </div>
+                <div class="flex gap-3">
+                    <button onclick="fetchLogs()" class="bg-white hover:bg-slate-50 text-slate-800 px-4 py-2.5 rounded-xl border border-slate-300 shadow-sm transition flex items-center gap-2 text-sm font-bold">
+                        <i class="fa-solid fa-rotate text-black"></i> تحديث السجلات
+                    </button>
+                    <button id="btn-clear-audit-logs" onclick="triggerClearLogs()" class="bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 px-4 py-2.5 rounded-xl transition flex items-center gap-2 text-sm font-bold">
+                        <i class="fa-solid fa-trash-can"></i> مسح سجلات الطباعة
+                    </button>
+                </div>
+            </div>
+
+            <!-- Logs Table Container -->
+            <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-slate-200 text-right">
+                        <thead class="bg-slate-100">
+                            <tr>
+                                <th scope="col" class="px-6 py-4 text-xs font-bold text-slate-600 uppercase tracking-wider">الرقم</th>
+                                <th scope="col" class="px-6 py-4 text-xs font-bold text-slate-600 uppercase tracking-wider">العرض المسرحي</th>
+                                <th scope="col" class="px-6 py-4 text-xs font-bold text-slate-600 uppercase tracking-wider">المنطقة</th>
+                                <th scope="col" class="px-6 py-4 text-xs font-bold text-slate-600 uppercase tracking-wider">رقم التذكرة</th>
+                                <th scope="col" class="px-6 py-4 text-xs font-bold text-slate-600 uppercase tracking-wider">جهاز الإصدار</th>
+                                <th scope="col" class="px-6 py-4 text-xs font-bold text-slate-600 uppercase tracking-wider">العملية</th>
+                                <th scope="col" class="px-6 py-4 text-xs font-bold text-slate-600 uppercase tracking-wider">الوقت و التاريخ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="logs-table-body" class="divide-y divide-slate-100 bg-white text-sm">
+                            <tr>
+                                <td colspan="7" class="px-6 py-8 text-center text-slate-500">
+                                    جاري تحميل السجلات التاريخية...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== USER MANAGEMENT PANEL (SUPERUSER ONLY) ==================== -->
+        <section id="panel-users" class="hidden max-w-6xl mx-auto space-y-6">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-3">
+                        <i class="fa-solid fa-users-gear text-black"></i> إدارة المستخدمين والصلاحيات
+                    </h2>
+                    <p class="text-sm text-slate-500">إضافة مستخدمين جدد وتحديد مستوى الصلاحيات وإدارة الوصول للنظام</p>
+                </div>
+                <button onclick="openCreateUserModal()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2.5 rounded-xl transition flex items-center gap-2 text-sm font-bold shadow-md shadow-emerald-500/20">
+                    <i class="fa-solid fa-user-plus"></i> إضافة مستخدم جديد
+                </button>
+            </div>
+
+            <!-- User Roles Explanation Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="w-8 h-8 rounded-xl bg-amber-50 text-amber-700 border border-amber-200 flex items-center justify-center font-black text-sm">1</span>
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-sm">بائع تذاكر (Ticket Seller)</h4>
+                            <p class="text-[11px] text-slate-500">المستوى الأول</p>
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-600 leading-relaxed">صلاحية محددة تشمل <strong>بوابة قطع التذاكر</strong> و<strong>بوابة الدخول</strong> فقط.</p>
+                </div>
+                <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="w-8 h-8 rounded-xl bg-blue-50 text-blue-700 border border-blue-200 flex items-center justify-center font-black text-sm">2</span>
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-sm">مشرف (Admin)</h4>
+                            <p class="text-[11px] text-slate-500">المستوى الثاني</p>
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-600 leading-relaxed">صلاحية تشمل <strong>لوحة المراقبة</strong>، <strong>بوابة الدخول</strong>، و<strong>سجلات التدقيق</strong>.</p>
+                </div>
+                <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center justify-center font-black text-sm">3</span>
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-sm">مدير النظام (Super User)</h4>
+                            <p class="text-[11px] text-slate-500">المستوى الشامل</p>
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-600 leading-relaxed">كامل الصلاحيات: لوحة المراقبة، قطع التذاكر، الدخول، إعداد العروض، التدقيق، وإدارة المستخدمين.</p>
+                </div>
+            </div>
+
+            <!-- Users Table Container -->
+            <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+                <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                    <h3 class="font-bold text-slate-900 text-base flex items-center gap-2">
+                        <i class="fa-solid fa-address-book text-slate-700"></i> حسابات المستخدمين المسجلة
+                    </h3>
+                    <button onclick="fetchUsersList()" class="text-xs font-bold text-slate-600 hover:text-black flex items-center gap-1.5 bg-white border border-slate-200 px-3 py-1.5 rounded-lg shadow-sm">
+                        <i class="fa-solid fa-rotate"></i> تحديث القائمة
+                    </button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-slate-200 text-right">
+                        <thead class="bg-slate-100 text-xs font-bold text-slate-600 uppercase">
+                            <tr>
+                                <th class="px-6 py-3.5">الرقم</th>
+                                <th class="px-6 py-3.5">اسم المستخدم</th>
+                                <th class="px-6 py-3.5">الاسم بالكامل</th>
+                                <th class="px-6 py-3.5">مستوى الصلاحية</th>
+                                <th class="px-6 py-3.5">تاريخ التسجيل</th>
+                                <th class="px-6 py-3.5 text-center">إجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-table-body" class="divide-y divide-slate-100 text-sm font-medium text-slate-800">
+                            <tr>
+                                <td colspan="6" class="text-center py-6 text-slate-500">جاري تحميل قائمة المستخدمين...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modal Device Register Name Config -->
+    <div id="device-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-[100] hidden">
+        <div class="bg-white border border-slate-200 rounded-3xl p-8 max-w-md w-full mx-4 shadow-2xl">
+            <h3 class="text-xl font-bold text-slate-900 mb-2 flex items-center gap-2">
+                <i class="fa-solid fa-display text-blue-600"></i> تعريف وتسمية جهاز الطباعة
+            </h3>
+            <p class="text-xs text-slate-500 mb-6">يرجى تعيين اسم معرف لهذا الجهاز (مثلاً: بوابة 1 أو شباك التذاكر الرئيسي) لتسجيل الحركات بالتدقيق</p>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">اسم الجهاز الحالي</label>
+                    <input type="text" id="device-input-name" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600 transition">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">معرف الجهاز الفريد (UUID)</label>
+                    <input type="text" id="device-input-uuid" readonly dir="ltr" class="w-full bg-slate-100 border border-slate-200 rounded-xl px-4 py-2 text-slate-500 font-mono text-xs focus:outline-none text-left">
+                </div>
+                <button onclick="saveDeviceConfiguration()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3.5 rounded-xl transition shadow-md">
+                    حفظ وإكمال التسجيل
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Change & Reset Seats -->
+    <div id="seats-edit-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-[100] hidden">
+        <div class="bg-white border border-slate-200 rounded-3xl p-8 max-w-md w-full mx-4 shadow-2xl">
+            <div class="flex justify-between items-center mb-2">
+                <h3 id="edit-zone-title" class="text-xl font-bold text-slate-900 flex items-center gap-2">
+                    <i class="fa-solid fa-chair text-blue-600"></i> تعديل مقاعد المنطقة
+                </h3>
+                <button onclick="closeEditSeatsModal()" class="text-slate-400 hover:text-slate-700 transition"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <p class="text-xs text-slate-500 mb-6">يمكنك تغيير السعة الكلية أو تصفير/إعادة تعيين عدد المقاعد المتاحة حالياً للمنطقة</p>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">السعة الكلية للمنطقة (Total Capacity)</label>
+                    <input type="number" id="edit-capacity" min="0" required dir="ltr" style="direction: ltr !important; text-align: left !important; unicode-bidi: isolate !important;" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600 transition text-left">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">المقاعد المتاحة حالياً (Available Seats)</label>
+                    <div class="flex gap-2">
+                        <input type="number" id="edit-available" min="0" required dir="ltr" style="direction: ltr !important; text-align: left !important; unicode-bidi: isolate !important;" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600 transition text-left">
+                        <button onclick="resetSeatsToMax()" class="bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-800 px-4 rounded-xl transition text-xs font-bold whitespace-nowrap">إعادة امتلاء</button>
+                    </div>
+                </div>
+                <div class="flex gap-4 pt-4">
+                    <button onclick="closeEditSeatsModal()" class="w-1/2 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold py-3.5 rounded-xl transition border border-slate-200">
+                        إلغاء
+                    </button>
+                    <button onclick="saveSeatsConfiguration()" class="w-1/2 bg-blue-600 hover:bg-blue-500 text-white font-bold py-3.5 rounded-xl transition shadow-md">
+                        حفظ التغييرات
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Edit Show Details -->
+    <div id="show-edit-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-[100] hidden">
+        <div class="bg-white border border-slate-200 rounded-3xl p-8 max-w-lg w-full mx-4 shadow-2xl">
+            <div class="flex justify-between items-center mb-2">
+                <h3 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+                    <i class="fa-solid fa-pen-to-square text-amber-600"></i> تعديل بيانات العرض
+                </h3>
+                <button onclick="closeEditShowModal()" class="text-slate-400 hover:text-slate-700 transition"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <p class="text-xs text-slate-500 mb-6">تعديل اسم العرض، كود البادئة، تاريخ ووقت العرض</p>
+            
+            <input type="hidden" id="edit-show-id">
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">اسم العرض المسرحي</label>
+                    <input type="text" id="edit-show-name" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-slate-900 focus:bg-white focus:outline-none focus:border-amber-500 transition">
+                </div>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">كود / بادئة العرض</label>
+                        <input type="text" id="edit-show-prefix" dir="ltr" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-slate-900 focus:bg-white focus:outline-none focus:border-amber-500 transition text-left">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">تاريخ العرض</label>
+                        <input type="date" id="edit-show-date" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-slate-900 focus:bg-white focus:outline-none focus:border-amber-500 transition">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">وقت بدء العرض</label>
+                        <input type="time" id="edit-show-start-time" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-slate-900 focus:bg-white focus:outline-none focus:border-amber-500 transition">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">وقت انتهاء العرض</label>
+                        <input type="time" id="edit-show-end-time" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-slate-900 focus:bg-white focus:outline-none focus:border-amber-500 transition">
+                    </div>
+                </div>
+                
+                <div class="flex gap-3 pt-4">
+                    <button onclick="closeEditShowModal()" class="w-1/3 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold py-3.5 rounded-xl transition border border-slate-200">
+                        إلغاء
+                    </button>
+                    <button onclick="deleteCurrentEditShow()" class="w-1/3 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 font-bold py-3.5 rounded-xl transition flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-trash text-xs"></i> حذف العرض
+                    </button>
+                    <button onclick="saveShowConfiguration()" class="w-1/3 bg-amber-600 hover:bg-amber-500 text-white font-bold py-3.5 rounded-xl transition shadow-md">
+                        حفظ التعديلات
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Create User -->
+    <div id="user-create-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-[100] hidden">
+        <div class="bg-white border border-slate-200 rounded-3xl p-8 max-w-md w-full mx-4 shadow-2xl">
+            <div class="flex justify-between items-center mb-2">
+                <h3 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+                    <i class="fa-solid fa-user-plus text-emerald-600"></i> إضافة مستخدم جديد
+                </h3>
+                <button onclick="closeCreateUserModal()" class="text-slate-400 hover:text-slate-700 transition"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <p class="text-xs text-slate-500 mb-6">أنشئ حساباً جديداً وحدد مستوى الصلاحيات المطلوب</p>
+            
+            <form onsubmit="handleCreateUser(event)" class="space-y-4">
+                <div id="create-user-error-box" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-2xl text-xs flex items-center gap-2">
+                    <i class="fa-solid fa-circle-exclamation text-red-500 text-sm"></i>
+                    <span id="create-user-error-msg">خطأ في الإدخال</span>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">اسم المستخدم للدخول (Username)</label>
+                    <input type="text" id="new-user-username" required dir="ltr" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-slate-900 focus:bg-white focus:outline-none focus:border-emerald-600 transition text-left">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">الاسم الكامل (Display Name)</label>
+                    <input type="text" id="new-user-fullname" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-slate-900 focus:bg-white focus:outline-none focus:border-emerald-600 transition">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">كلمة المرور (Password)</label>
+                    <input type="password" id="new-user-password" required minlength="4" dir="ltr" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-slate-900 focus:bg-white focus:outline-none focus:border-emerald-600 transition text-left">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">مستوى الصلاحية (Access Level)</label>
+                    <select id="new-user-role" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-slate-900 focus:bg-white focus:outline-none focus:border-emerald-600 transition font-bold text-sm">
+                        <option value="ticket_seller">Level 1 - بائع تذاكر (قطع التذاكر + بوابة الدخول)</option>
+                        <option value="admin">Level 2 - مشرف (لوحة المراقبة + بوابة الدخول + التدقيق)</option>
+                        <option value="superuser">Level 3 - مدير النظام (كامل الصلاحيات + إدارة المستخدمين)</option>
+                    </select>
+                </div>
+                <div class="flex gap-4 pt-3">
+                    <button type="button" onclick="closeCreateUserModal()" class="w-1/2 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold py-3.5 rounded-xl transition border border-slate-200">
+                        إلغاء
+                    </button>
+                    <button type="submit" class="w-1/2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3.5 rounded-xl transition shadow-md shadow-emerald-500/20">
+                        حفظ الحساب
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    </div> <!-- End of #app-view -->
+
+    <!-- App Frontend Script logic -->
+    <script>
+        const API_BASE = ""; // Host relative urls to bypass CORS issues natively
+        let currentTab = 'dashboard';
+        let activeDevice = { id: '', name: '' };
+        let selectedShow = null;
+        let selectedShowId = null;
+        let selectedZone = null;
+        let allShows = [];
+        let currentUser = null;
+
+        const ROLE_PERMISSIONS = {
+            'ticket_seller': ['print', 'gate'],
+            'admin': ['print', 'dashboard', 'gate', 'audit'],
+            'superuser': ['dashboard', 'print', 'gate', 'setup', 'audit', 'users']
+        };
+
+        const ROLE_TITLES = {
+            'ticket_seller': 'بائع تذاكر (Level 1)',
+            'admin': 'مشرف (Level 2)',
+            'superuser': 'مدير النظام (Level 3)'
+        };
+
+        const ROLE_BADGES = {
+            'ticket_seller': 'bg-amber-100 text-amber-800 border border-amber-300',
+            'admin': 'bg-blue-100 text-blue-800 border border-blue-300',
+            'superuser': 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+        };
+
+        const tabLabels = {
+            'dashboard': 'لوحة المراقبة',
+            'print': 'بوابة قطع التذاكر',
+            'gate': 'بوابة الدخول والتحقق',
+            'setup': 'إعداد عرض جديد',
+            'audit': 'السجلات والتدقيق',
+            'users': 'إدارة المستخدمين'
+        };
+
+        function enforceNavPermissions() {
+            if (!currentUser) return;
+            const allowedTabs = ROLE_PERMISSIONS[currentUser.role] || ['print', 'gate'];
+            const allTabIds = ['dashboard', 'print', 'gate', 'setup', 'audit', 'users'];
+            allTabIds.forEach(id => {
+                const btn = document.getElementById(`tab-${id}`);
+                if (!btn) return;
+                if (!allowedTabs.includes(id)) {
+                    btn.style.display = 'none';
+                    btn.classList.add('hidden');
+                } else {
+                    btn.style.display = 'flex';
+                    btn.classList.remove('hidden');
+                }
+            });
+        }
+
+        function toggleNavMenu(e) {
+            if (e) e.stopPropagation();
+            enforceNavPermissions();
+            const menu = document.getElementById('nav-dropdown-menu');
+            const chevron = document.getElementById('nav-menu-chevron');
+            if (menu) {
+                const isHidden = menu.classList.contains('hidden');
+                if (isHidden) {
+                    menu.classList.remove('hidden');
+                    if (chevron) chevron.style.transform = 'rotate(180deg)';
+                } else {
+                    menu.classList.add('hidden');
+                    if (chevron) chevron.style.transform = 'rotate(0deg)';
+                }
+            }
+        }
+
+        function closeNavMenu() {
+            const menu = document.getElementById('nav-dropdown-menu');
+            const chevron = document.getElementById('nav-menu-chevron');
+            if (menu && !menu.classList.contains('hidden')) {
+                menu.classList.add('hidden');
+                if (chevron) chevron.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        window.addEventListener('click', (e) => {
+            const container = document.getElementById('main-nav-container');
+            if (container && !container.contains(e.target)) {
+                closeNavMenu();
+            }
+        });
+
+        function selectNavTab(tabId) {
+            closeNavMenu();
+            switchTab(tabId);
+        }
+
+        // Tab Switcher with Role-Based Access Control
+        function switchTab(tabId) {
+            if (!currentUser) {
+                showAuthView();
+                return;
+            }
+
+            const allowedTabs = ROLE_PERMISSIONS[currentUser.role] || ['print', 'gate'];
+            if (!allowedTabs.includes(tabId)) {
+                tabId = allowedTabs.includes('dashboard') ? 'dashboard' : allowedTabs[0];
+            }
+
+            document.querySelectorAll('main > section').forEach(el => el.classList.add('hidden'));
+            const panel = document.getElementById(`panel-${tabId}`);
+            if (panel) panel.classList.remove('hidden');
+            
+            // Update Label in Menu Button
+            const labelEl = document.getElementById('current-tab-label');
+            if (labelEl && tabLabels[tabId]) {
+                labelEl.innerText = tabLabels[tabId];
+            }
+
+            // Update dropdown active items and enforce role visibility
+            const allTabIds = ['dashboard', 'print', 'gate', 'setup', 'audit', 'users'];
+            allTabIds.forEach(id => {
+                const btn = document.getElementById(`tab-${id}`);
+                if (!btn) return;
+                
+                if (!allowedTabs.includes(id)) {
+                    btn.style.display = 'none';
+                    btn.classList.add('hidden');
+                    return;
+                }
+                
+                btn.style.display = 'flex';
+                btn.classList.remove('hidden');
+
+                const dot = btn.querySelector('.nav-active-dot');
+                if (id === tabId) {
+                    btn.className = "w-full text-right px-3.5 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-between group bg-slate-100 text-black border border-slate-300";
+                    if (dot) dot.classList.remove('hidden');
+                } else {
+                    btn.className = "w-full text-right px-3.5 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-between text-black hover:bg-slate-100 hover:text-black";
+                    if (dot) dot.classList.add('hidden');
+                }
+            });
+            
+            currentTab = tabId;
+            
+            // Refresh on switch
+            if (tabId === 'dashboard') fetchShows();
+            if (tabId === 'print') populatePrintShows();
+            if (tabId === 'gate') {
+                fetchGateStats();
+                populateGateShowSelect();
+                setTimeout(() => {
+                    const inp = document.getElementById('gate-code-input');
+                    if (inp) inp.focus();
+                }, 80);
+            }
+            if (tabId === 'audit') fetchLogs();
+            if (tabId === 'users') fetchUsersList();
+        }
+
+        function getArabicDayOfWeek(dateStr) {
+            if (!dateStr) return '';
+            const parts = dateStr.split('-');
+            if (parts.length !== 3) return '';
+            const dateObj = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+            const days = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+            return days[dateObj.getDay()];
+        }
+
+        function formatTime12H(timeStr) {
+            if (!timeStr) return '';
+            const clean = timeStr.toString().trim();
+            if (clean.includes('م') || clean.includes('ص') || clean.includes('AM') || clean.includes('PM')) {
+                return clean;
+            }
+            const parts = clean.split(':');
+            if (parts.length >= 2) {
+                let h = parseInt(parts[0]);
+                const m = parts[1].padStart(2, '0');
+                const period = h >= 12 ? 'م' : 'ص';
+                h = h % 12;
+                if (h === 0) h = 12;
+                return `${h}:${m} ${period}`;
+            }
+            return clean;
+        }
+
+        function formatShowTimeRange(startTime, endTime) {
+            const s = formatTime12H(startTime);
+            const e = formatTime12H(endTime);
+            if (s && e) {
+                return `من ${s} إلى ${e}`;
+            }
+            return s || e || '';
+        }
+
+        function getZoneDigit(zoneStr) {
+            if (!zoneStr) return '1';
+            const firstChar = zoneStr.toString().trim().toUpperCase().charAt(0);
+            if (firstChar >= 'A' && firstChar <= 'Z') {
+                return (firstChar.charCodeAt(0) - 65 + 1).toString();
+            }
+            if (!isNaN(firstChar) && firstChar !== '') {
+                return firstChar;
+            }
+            return '1';
+        }
+
+        // Format ticket number: Zone - Prefix + ZoneDigit + 3-digit sequence (e.g. A - 111005)
+        function formatFullTicketId(prefix, zoneName, ticketNumber) {
+            const zName = (zoneName || 'A').toString().trim().toUpperCase();
+            const p = (prefix || '').toString().trim();
+            const z = getZoneDigit(zoneName);
+            const num = parseInt(ticketNumber) || 1;
+            const numStr = num < 10 ? '00' + num : (num < 100 ? '0' + num : '' + num);
+            return `${zName} - ${p}${z}${numStr}`;
+        }
+
+        // Standalone offline Code39 barcode SVG generator
+        function generateBarcodeSvg(text, height = 36) {
+            const code39Map = {
+                '0': '000110100', '1': '100100001', '2': '001100001', '3': '101100000',
+                '4': '000110001', '5': '100110000', '6': '001110000', '7': '000100101',
+                '8': '100100100', '9': '001100100', 'A': '100001001', 'B': '001001001',
+                'C': '101001000', 'D': '000011001', 'E': '100011000', 'F': '001011000',
+                'G': '000001101', 'H': '100001100', 'I': '001001100', 'J': '000011100',
+                'K': '100000011', 'L': '001000011', 'M': '101000010', 'N': '000010011',
+                'O': '100010010', 'P': '001010010', 'Q': '000000111', 'R': '100000110',
+                'S': '001000110', 'T': '000010110', 'U': '110000001', 'V': '011000001',
+                'W': '111000000', 'X': '010010001', 'Y': '110010000', 'Z': '011010000',
+                '-': '010000101', '.': '110000100', ' ': '011000100', '$': '010101000',
+                '/': '010100010', '+': '010001010', '%': '000101010', '*': '010010100'
+            };
+            const clean = '*' + String(text).toUpperCase().replace(/\s+/g, '') + '*';
+            let totalWidth = 0;
+            let rects = '';
+            const narrow = 2;
+            const wide = 5;
+            
+            for (let i = 0; i < clean.length; i++) {
+                const char = clean[i];
+                const pattern = code39Map[char] || code39Map['0'];
+                for (let j = 0; j < pattern.length; j++) {
+                    const isBar = (j % 2 === 0);
+                    const w = pattern[j] === '1' ? wide : narrow;
+                    if (isBar) {
+                        rects += `<rect x="${totalWidth}" y="0" width="${w}" height="${height}" fill="#000000"/>`;
+                    }
+                    totalWidth += w;
+                }
+                totalWidth += narrow;
+            }
+            return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${totalWidth} ${height}" style="max-width: 175px; height: ${height}px; display: block; margin: 4px auto 0 auto;">${rects}</svg>`;
+        }
+
+        // Initialize Device Fingerprinting
+        function initDevice() {
+            let deviceId = localStorage.getItem('device_uuid');
+            let deviceName = localStorage.getItem('device_name');
+            
+            if (!deviceId) {
+                deviceId = generateUUID();
+                deviceName = 'Terminal ' + Math.floor(Math.random() * 1000);
+                localStorage.setItem('device_uuid', deviceId);
+                localStorage.setItem('device_name', deviceName);
+            }
+            
+            activeDevice.id = deviceId;
+            activeDevice.name = deviceName;
+            
+            // Update Headers displays
+            document.getElementById('device-display-name').innerText = deviceName;
+            document.getElementById('device-display-uuid').innerText = 'UUID: ' + deviceId;
+            
+            // Post registration update to server
+            registerDeviceOnServer();
+        }
+
+        function registerDeviceOnServer() {
+            fetch('/api/devices/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: activeDevice.id, deviceName: activeDevice.name })
+            })
+            .then(res => res.json())
+            .then(data => console.log("Device sync result:", data))
+            .catch(err => console.error("Device sync failed:", err));
+        }
+
+        function triggerDeviceConfigModal() {
+            document.getElementById('device-input-name').value = activeDevice.name;
+            document.getElementById('device-input-uuid').value = activeDevice.id;
+            document.getElementById('device-modal').classList.remove('hidden');
+        }
+
+        function saveDeviceConfiguration() {
+            const nameInput = document.getElementById('device-input-name').value.trim();
+            if (!nameInput) return;
+            
+            localStorage.setItem('device_name', nameInput);
+            activeDevice.name = nameInput;
+            
+            document.getElementById('device-display-name').innerText = nameInput;
+            document.getElementById('device-modal').classList.add('hidden');
+            
+            registerDeviceOnServer();
+        }
+
+        function generateUUID() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+
+        // Fetch Shows list from server (Dashboard & monitor)
+        function fetchShows() {
+            fetch('/api/shows')
+                .then(res => res.json())
+                .then(data => {
+                    allShows = data;
+                    renderDashboardShows(data);
+                    populateGateShowSelect(data);
+                })
+                .catch(err => {
+                    console.error("Fetch shows failed:", err);
+                    document.getElementById('shows-list-container').innerHTML = `
+                        <div class="bg-red-950/20 border border-red-500/30 rounded-2xl p-6 text-center text-red-400">
+                            <i class="fa-solid fa-circle-exclamation text-2xl mb-2"></i>
+                            <p>فشل جلب العروض من قاعدة البيانات. يرجى التحقق من اتصال الخادم والشبكة.</p>
+                        </div>
+                    `;
+                });
+
+            // Fetch logs to update total printed tickets count on dashboard
+            fetch('/api/logs')
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('stat-tickets-printed').innerText = data.length;
+                })
+                .catch(err => console.error("Stats print log fetch failed:", err));
+        }
+
+        function renderDashboardShows(shows) {
+            const container = document.getElementById('shows-list-container');
+            if (shows.length === 0) {
+                container.innerHTML = `
+                    <div class="bg-white border border-slate-200 rounded-2xl p-8 text-center text-slate-500 shadow-sm">
+                        <i class="fa-solid fa-circle-exclamation text-3xl mb-3 text-slate-600"></i>
+                        <p>لا يوجد أي عروض مسجلة بالخادم بعد. انتقل إلى لوحة الإعداد لإضافة عرض جديد.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Update header stats
+            document.getElementById('stat-shows-count').innerText = shows.length;
+            let totalAvailable = 0;
+            shows.forEach(s => {
+                s.zones.forEach(z => {
+                    totalAvailable += z.available_seats;
+                });
+            });
+            document.getElementById('stat-seats-avail').innerText = totalAvailable;
+
+            let html = '';
+            shows.forEach(show => {
+                let showAvail = 0;
+                let showTotal = 0;
+                show.zones.forEach(z => {
+                    showAvail += z.available_seats;
+                    showTotal += z.total_capacity;
+                });
+
+                const prefixBadge = show.prefix ? `<span class="bg-amber-50 text-amber-700 border border-amber-200 text-xs px-2.5 py-1 rounded-full font-bold">كود: ${show.prefix}</span>` : '';
+
+                html += `
+                    <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm hover:border-blue-300 transition">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-100 pb-4 mb-6">
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <span class="bg-blue-50 text-blue-700 border border-blue-200 text-xs px-2.5 py-1 rounded-full font-bold">العرض #${show.id}</span>
+                                    ${prefixBadge}
+                                    <span class="bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs px-2.5 py-1 rounded-full font-bold flex items-center gap-1">
+                                        <i class="fa-solid fa-chair text-[10px]"></i> متبقي: ${showAvail} / ${showTotal}
+                                    </span>
+                                </div>
+                                <h3 class="text-xl font-black text-slate-900 mt-2">${show.name}</h3>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <div class="flex items-center gap-4 text-sm text-slate-500 font-medium">
+                                    <span class="flex items-center gap-1.5"><i class="fa-solid fa-calendar-day text-slate-400"></i> ${getArabicDayOfWeek(show.date)} ${show.date}</span>
+                                    <span class="flex items-center gap-1.5"><i class="fa-solid fa-clock text-slate-400"></i> ${formatShowTimeRange(show.time, show.end_time)}</span>
+                                </div>
+                                ${currentUser && currentUser.role === 'superuser' ? `
+                                    <div class="flex items-center gap-2">
+                                        <button onclick="openEditShowModal(${show.id})" class="bg-slate-100 hover:bg-amber-50 text-slate-700 hover:text-amber-700 border border-slate-200 hover:border-amber-300 px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition" title="تعديل بيانات العرض">
+                                            <i class="fa-solid fa-pen-to-square text-xs"></i> تعديل
+                                        </button>
+                                        <button onclick="handleDeleteShow(${show.id}, '${(show.name || '').replace(/'/g, "\\'")}')" class="bg-slate-100 hover:bg-red-50 text-slate-700 hover:text-red-700 border border-slate-200 hover:border-red-300 px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition" title="حذف هذا العرض">
+                                            <i class="fa-solid fa-trash text-xs"></i> حذف
+                                        </button>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+
+                        <!-- Zones capacities grid inside show -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                `;
+
+                show.zones.forEach(zone => {
+                    const pct = Math.round((zone.available_seats / zone.total_capacity) * 100);
+                    let colorClass = 'text-emerald-600';
+                    let progressClass = 'bg-emerald-500';
+                    if (pct <= 10) {
+                        colorClass = 'text-red-600';
+                        progressClass = 'bg-red-600';
+                    } else if (pct <= 30) {
+                        colorClass = 'text-amber-600';
+                        progressClass = 'bg-amber-500';
+                    }
+
+                    const editSeatsBtn = (currentUser && currentUser.role === 'superuser') ? `
+                        <button onclick="openEditSeatsModal(${zone.id}, '${zone.zone_name}', ${zone.total_capacity}, ${zone.available_seats})" class="text-slate-400 hover:text-blue-600 transition" title="تعديل المقاعد">
+                            <i class="fa-solid fa-pen-to-square text-xs"></i>
+                        </button>
+                    ` : '';
+
+                    html += `
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex flex-col justify-between">
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm font-bold text-slate-800">المنطقة (${zone.zone_name})</span>
+                                <div class="flex items-center gap-2">
+                                    ${editSeatsBtn}
+                                    <span class="text-xs ${colorClass} font-bold">${pct}% متبقي</span>
+                                </div>
+                            </div>
+                            <div class="my-4">
+                                <div class="flex justify-between items-baseline mb-1">
+                                    <span class="text-2xl font-black text-slate-900">${zone.available_seats}</span>
+                                    <span class="text-xs text-slate-500">من أصل ${zone.total_capacity} مقعد</span>
+                                </div>
+                                <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                                    <div class="${progressClass} h-full" style="width: ${pct}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                html += `
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        // Populates shows in Ticketing select as large pill cards
+        function populatePrintShows() {
+            fetch('/api/shows')
+                .then(res => res.json())
+                .then(shows => {
+                    const container = document.getElementById('print-shows-container');
+                    let html = '';
+                    shows.forEach(s => {
+                        const prefixPill = s.prefix ? `<span class="bg-amber-500/20 text-amber-800 px-1.5 py-0.5 rounded text-[10px] font-bold mr-1">#${s.prefix}</span>` : '';
+                        html += `
+                            <div id="print-show-card-${s.id}" 
+                                 onclick="selectPrintShow(${s.id})" 
+                                 class="p-4 rounded-xl border-2 border-slate-200 bg-slate-50 text-right cursor-pointer hover:border-blue-500 transition flex flex-col justify-between h-28">
+                                <h4 class="font-bold text-slate-900 text-xs leading-tight line-clamp-2">${prefixPill}${s.name}</h4>
+                                <p class="text-[10px] text-slate-500 mt-1">${s.date} &nbsp;|&nbsp; ${formatShowTimeRange(s.time, s.end_time)}</p>
+                            </div>
+                        `;
+                    });
+                    container.innerHTML = html || '<div class="col-span-2 sm:col-span-3 md:col-span-4 lg:col-span-5 text-center text-slate-500 py-4 text-xs">لا يوجد عروض حالياً</div>';
+                    
+                    // Reset zones UI
+                    document.getElementById('print-zone-grid').innerHTML = `
+                        <div class="col-span-2 text-center py-4 text-xs text-slate-500 bg-slate-50 rounded-xl border border-slate-200">
+                            يرجى اختيار العرض أولاً لرؤية المناطق المتاحة
+                        </div>
+                    `;
+                    const btn = document.getElementById('btn-issue-ticket');
+                    btn.disabled = true;
+                    btn.innerHTML = `<i class="fa-solid fa-circle-check text-xl"></i> طباعة التذكرة فوراً`;
+                    btn.className = "w-full bg-slate-200 text-slate-400 cursor-not-allowed font-bold py-4 rounded-xl transition-all duration-300 flex items-center justify-center gap-3 text-lg shadow-sm";
+                });
+        }
+
+        function selectPrintShow(showId) {
+            selectedShowId = showId;
+            
+            // Highlight the selected card
+            document.querySelectorAll('#print-shows-container > div').forEach(el => {
+                el.classList.remove('border-blue-600', 'bg-blue-50', 'shadow-sm');
+            });
+            const activeEl = document.getElementById(`print-show-card-${showId}`);
+            if (activeEl) {
+                activeEl.classList.add('border-blue-600', 'bg-blue-50', 'shadow-sm');
+            }
+            
+            onPrintShowChange(showId);
+        }
+
+        function onPrintShowChange(showId) {
+            const id = showId || selectedShowId;
+            if (!id) {
+                // reset
+                populatePrintShows();
+                selectedShowId = null;
+                selectedShow = null;
+                return;
+            }
+
+            fetch('/api/shows')
+                .then(res => res.json())
+                .then(shows => {
+                    const show = shows.find(s => s.id == id);
+                    if (!show) return;
+                    selectedShow = show;
+                    
+                    // Populate zones grid
+                    const grid = document.getElementById('print-zone-grid');
+                    let html = '';
+                    show.zones.forEach(z => {
+                        const disabled = z.available_seats <= 0;
+                        const btnClass = disabled 
+                            ? 'bg-slate-100 border-slate-200 text-slate-400 cursor-not-allowed'
+                            : 'bg-slate-50 border-slate-200 text-slate-900 hover:border-blue-500 cursor-pointer';
+                        
+                        html += `
+                            <div id="zone-selector-${z.zone_name}" 
+                                 onclick="${disabled ? '' : `selectZone('${z.zone_name}')`}" 
+                                 class="p-4 rounded-xl border-2 text-center transition flex flex-col justify-between h-24 ${btnClass}">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm font-bold uppercase">المنطقة ${z.zone_name}</span>
+                                    ${disabled ? '<span class="text-[10px] text-red-500 bg-red-500/10 px-1.5 py-0.5 rounded">ممتلئ</span>' : ''}
+                                </div>
+                                <div class="text-right">
+                                    <span class="text-xl font-extrabold">${z.available_seats}</span>
+                                    <span class="text-xs text-slate-400"> مقعد متبقي</span>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    grid.innerHTML = html;
+                    
+                    // Reset zone selection
+                    selectedZone = null;
+                    const btn = document.getElementById('btn-issue-ticket');
+                    btn.disabled = true;
+                    btn.innerHTML = `<i class="fa-solid fa-circle-check text-xl"></i> طباعة التذكرة فوراً`;
+                    btn.className = "w-full bg-slate-200 text-slate-400 cursor-not-allowed font-bold py-4 rounded-xl transition-all duration-300 flex items-center justify-center gap-3 text-lg shadow-sm";
+                });
+        }
+
+        function getTicketCount() {
+            const input = document.getElementById('ticket-count-input');
+            const val = input ? parseInt(input.value) || 1 : 1;
+            return Math.max(1, Math.min(50, val));
+        }
+
+        function adjustTicketCount(delta) {
+            const input = document.getElementById('ticket-count-input');
+            if (!input) return;
+            let val = (parseInt(input.value) || 1) + delta;
+            if (val < 1) val = 1;
+            if (val > 50) val = 50;
+            input.value = val;
+            onTicketCountChange();
+        }
+
+        function onTicketCountChange() {
+            const input = document.getElementById('ticket-count-input');
+            if (!input) return;
+            let val = parseInt(input.value) || 1;
+            if (val < 1) val = 1;
+            if (val > 50) val = 50;
+            input.value = val;
+            
+            const badge = document.getElementById('ticket-count-badge');
+            if (badge) {
+                if (val === 1) badge.innerText = "تذكرة واحدة";
+                else if (val === 2) badge.innerText = "تذكرتان";
+                else if (val <= 10) badge.innerText = `${val} تذاكر`;
+                else badge.innerText = `${val} تذكرة`;
+            }
+            
+            // Update preview and button text if zone selected
+            if (selectedZone) {
+                selectZone(selectedZone);
+            }
+        }
+
+        function resetTicketCount() {
+            const input = document.getElementById('ticket-count-input');
+            if (input) {
+                input.value = 1;
+                onTicketCountChange();
+            }
+        }
+
+        function selectZone(zoneName) {
+            selectedZone = zoneName;
+            const count = getTicketCount();
+            
+            // Remove selection class from all
+            document.querySelectorAll('#print-zone-grid > div').forEach(el => {
+                el.classList.remove('border-blue-600', 'bg-blue-50', 'shadow-sm');
+            });
+            
+            // Add selection class to active one
+            const activeEl = document.getElementById(`zone-selector-${zoneName}`);
+            if (activeEl) {
+                activeEl.classList.add('border-blue-600', 'bg-blue-50', 'shadow-sm');
+            }
+            
+            // Update preview box
+            if (selectedShow) {
+                const zone = selectedShow.zones.find(z => z.zone_name === zoneName);
+                if (zone) {
+                    const startNum = zone.total_capacity - zone.available_seats + 1;
+                    const endNum = startNum + count - 1;
+                    const startFormatted = formatFullTicketId(selectedShow.prefix, zoneName, startNum);
+                    const endFormatted = formatFullTicketId(selectedShow.prefix, zoneName, endNum);
+                    
+                    if (count > 1) {
+                        document.getElementById('prev-ticket-id').innerText = `${startFormatted}  إلى  ${endFormatted} (${count} تذاكر)`;
+                    } else {
+                        document.getElementById('prev-ticket-id').innerText = startFormatted;
+                    }
+                    
+                    // Render Barcode in preview
+                    document.getElementById('prev-barcode-container').innerHTML = generateBarcodeSvg(startFormatted);
+                    
+                    // Render Zone Image in preview
+                    const zKey = (zoneName || 'A').toString().trim().toUpperCase().charAt(0);
+                    const zoneImgEl = document.getElementById('prev-zone-img');
+                    if (zoneImgEl) {
+                        zoneImgEl.src = (typeof ZONE_IMAGES !== 'undefined' && ZONE_IMAGES[zKey]) ? ZONE_IMAGES[zKey] : `/zone ${zKey}.png`;
+                    }
+
+                    // Update digital ticket credentials in preview
+                    const digitsOnly = (selectedShow.prefix || '') + getZoneDigit(zoneName) + String(startNum).padStart(3, '0');
+                    const prevDigitsEl = document.getElementById('prev-user-digits');
+                    const prevPassEl = document.getElementById('prev-user-passcode');
+                    if (prevDigitsEl) prevDigitsEl.innerText = digitsOnly;
+                    if (prevPassEl) prevPassEl.innerText = 'يُولَّد آلياً';
+
+                    const badge = document.getElementById('preview-status-badge');
+                    badge.innerText = count > 1 ? `معاينة ${count} تذاكر قبل الطباعة` : "معاينة قبل الطباعة";
+                    badge.className = "bg-blue-600/10 text-blue-400 border border-blue-500/25 text-[10px] px-2 py-0.5 rounded font-bold";
+                    
+                    document.getElementById('latest-ticket-preview-box').classList.remove('hidden');
+                }
+            }
+            
+            // Enable button
+            const btn = document.getElementById('btn-issue-ticket');
+            btn.disabled = false;
+            btn.innerHTML = `<i class="fa-solid fa-circle-check text-xl"></i> طباعة ${count > 1 ? count + ' تذاكر' : 'التذكرة'} فوراً`;
+            btn.className = "w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-xl transition-all duration-300 flex items-center justify-center gap-3 text-lg shadow-lg shadow-blue-500/20";
+        }
+
+        // Print Transaction Execution
+        function issueTicket() {
+            if (!selectedShow || !selectedZone) return;
+            
+            const count = getTicketCount();
+            const btn = document.getElementById('btn-issue-ticket');
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري قطع ${count > 1 ? count + ' تذاكر' : 'التذكرة'} وحجز المقاعد...`;
+
+            fetch('/api/tickets/print', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    showId: selectedShow.id,
+                    zoneName: selectedZone,
+                    deviceId: activeDevice.id,
+                    count: count
+                })
+            })
+            .then(res => {
+                if (!res.ok) {
+                    return res.json().then(err => { throw new Error(err.error || err.detail) });
+                }
+                return res.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    let tickets = data.tickets;
+                    
+                    // If backend only returned single ticket object, reconstruct full array of count tickets
+                    if (!tickets || !Array.isArray(tickets) || tickets.length === 0) {
+                        const baseTicket = data.ticket || {};
+                        const baseNum = parseInt(baseTicket.ticketNumber) || 1;
+                        tickets = [];
+                        for (let i = 0; i < count; i++) {
+                            const currNum = baseNum + i;
+                            const formattedId = formatFullTicketId(selectedShow.prefix, selectedZone, currNum);
+                            const digitStr = `${selectedShow.prefix || ''}${getZoneDigit(selectedZone)}${String(currNum).padStart(3, '0')}`;
+                            tickets.push({
+                                showName: selectedShow.name || baseTicket.showName,
+                                date: selectedShow.date || baseTicket.date,
+                                time: selectedShow.time || baseTicket.time,
+                                zoneName: selectedZone || baseTicket.zoneName,
+                                ticketNumber: currNum,
+                                ticketDigits: digitStr,
+                                ticketId: formattedId,
+                                passcode: baseTicket.passcode || '------'
+                            });
+                        }
+                    } else {
+                        // Ensure all tickets have the exact format guaranteed: Prefix + ZoneDigit + 3-digit sequence
+                        tickets.forEach(t => {
+                            t.ticketId = formatFullTicketId(selectedShow.prefix, t.zoneName || selectedZone, t.ticketNumber);
+                            if (!t.ticketDigits) {
+                                t.ticketDigits = `${selectedShow.prefix || ''}${getZoneDigit(t.zoneName || selectedZone)}${String(t.ticketNumber).padStart(3, '0')}`;
+                            }
+                        });
+                    }
+
+                    const firstTicket = tickets[0];
+                    const lastTicket = tickets[tickets.length - 1];
+
+                    // Update latest preview
+                    document.getElementById('prev-show-name').innerText = firstTicket.showName;
+                    document.getElementById('prev-date-time').innerText = `${getArabicDayOfWeek(firstTicket.date)} ${firstTicket.date} - ${firstTicket.time}`;
+                    
+                    if (tickets.length > 1) {
+                        document.getElementById('prev-ticket-id').innerText = `${firstTicket.ticketId}  إلى  ${lastTicket.ticketId} (${tickets.length} تذاكر)`;
+                    } else {
+                        document.getElementById('prev-ticket-id').innerText = firstTicket.ticketId;
+                    }
+                    
+                    // Render Barcode in preview
+                    document.getElementById('prev-barcode-container').innerHTML = generateBarcodeSvg(firstTicket.ticketId);
+
+                    // Render Zone Image in preview
+                    const zKey = (firstTicket.zoneName || selectedZone || 'A').toString().trim().toUpperCase().charAt(0);
+                    const zoneImgEl = document.getElementById('prev-zone-img');
+                    if (zoneImgEl) {
+                        zoneImgEl.src = (typeof ZONE_IMAGES !== 'undefined' && ZONE_IMAGES[zKey]) ? ZONE_IMAGES[zKey] : `/zone ${zKey}.png`;
+                    }
+
+                    // Render Digital Ticket Access Credentials in preview
+                    const prevDigitsEl = document.getElementById('prev-user-digits');
+                    const prevPassEl = document.getElementById('prev-user-passcode');
+                    if (prevDigitsEl) prevDigitsEl.innerText = firstTicket.ticketDigits || firstTicket.ticketId.replace(/\D/g, '');
+                    if (prevPassEl) prevPassEl.innerText = firstTicket.passcode || '------';
+
+                    const badge = document.getElementById('preview-status-badge');
+                    badge.innerText = `تمت طباعة ${tickets.length > 1 ? tickets.length + ' تذاكر' : 'التذكرة'} بنجاح`;
+                    badge.className = "bg-emerald-600 text-white text-[10px] px-2 py-0.5 rounded font-bold shadow-md shadow-emerald-500/20";
+                    
+                    document.getElementById('latest-ticket-preview-box').classList.remove('hidden');
+                    
+                    // Run actual silent printing or fallback print
+                    triggerPrinter(tickets);
+                    
+                    // Reset quantity back to 1
+                    resetTicketCount();
+                    
+                    // Refresh zones & shows
+                    onPrintShowChange();
+                }
+            })
+            .catch(err => {
+                alert("فشل قطع التذكرة: " + err.message);
+                // restore button
+                selectZone(selectedZone);
+            });
+        }
+
+        function buildMultiPageTicketsHtml(tickets) {
+            const logoStMarkos = (typeof LOGO_ST_MARKOS !== 'undefined') ? LOGO_ST_MARKOS : '/st markos-01.png';
+            const logoTheater = (typeof LOGO_THEATER !== 'undefined') ? LOGO_THEATER : '/Theater Logo.png';
+            const qrCodeImg = (typeof QR_CODE_PLACEHOLDER !== 'undefined') ? QR_CODE_PLACEHOLDER : '/qrcode_neiruz.stmarkos.org.png';
+
+            let pagesHtml = '';
+            tickets.forEach((ticket, idx) => {
+                const barcodeSvg = generateBarcodeSvg(ticket.ticketId);
+                const zKey = (ticket.zoneName || selectedZone || 'A').toString().trim().toUpperCase().charAt(0);
+                const imgSrc = (typeof ZONE_IMAGES !== 'undefined' && ZONE_IMAGES[zKey]) ? ZONE_IMAGES[zKey] : `/zone ${zKey}.png`;
+                const digitsOnly = ticket.ticketDigits || ticket.ticketId.replace(/\D/g, '');
+                const passcode = ticket.passcode || '------';
+
+                pagesHtml += `
+                    <div class="ticket-page">
+                        <div class="ticket-header">
+                            <div class="header-logo-side right-logo">
+                                <img src="${logoStMarkos}" alt="كنيسة مارمرقس">
+                            </div>
+                            <div class="header-text-center">
+                                <p class="church-title">كنيسة مارمرقس القبطية<br>الارثوذوكسية بمصر الجديدة</p>
+                                <p class="festival-title">عيد النيروز لعام 1744 للشهداء<br>نيروز 2026</p>
+                            </div>
+                            <div class="header-logo-side left-logo">
+                                <img src="${logoTheater}" alt="شعار المسرح">
+                            </div>
+                        </div>
+                        <div class="title">${ticket.showName}</div>
+                        <div class="details">${getArabicDayOfWeek(ticket.date)} ${ticket.date} &nbsp;-&nbsp; الساعة: ${ticket.time}</div>
+                        <div class="ticket-id">${ticket.ticketId}</div>
+                        <div class="ticket-barcode">${barcodeSvg}</div>
+                        <div class="ticket-zone-img"><img src="${imgSrc}" alt="Zone ${zKey}"></div>
+                        <div class="ticket-digital-access">
+                            <p class="access-title">صور الكود او افتح <strong>neiruz.stmarkos.org</strong> عشان تحمل نسخة من التذكرة</p>
+                            <p class="access-creds">اسم المستخدم: <strong>${digitsOnly}</strong> &nbsp;|&nbsp; كلمة المرور: <strong>${passcode}</strong></p>
+                            <div class="ticket-qr"><img src="${qrCodeImg}" alt="QR Code"></div>
+                            <p class="ticket-warning-note">رقم التذكرة يستخدم في الدخول مرة واحدة فقط<br>سواء الكترونية او ورقية</p>
+                        </div>
+                    </div>
+                `;
+            });
+
+            return `
+                <!DOCTYPE html>
+                <html lang="ar" dir="rtl">
+                <head>
+                    <meta charset="UTF-8">
+                    <title>طباعة التذاكر (${tickets.length})</title>
+                    <link rel="preconnect" href="https://fonts.googleapis.com">
+                    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+                    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+                    <style>
+                        @page {
+                            margin: 0;
+                            size: auto;
+                        }
+                        * {
+                            box-sizing: border-box;
+                        }
+                        html, body {
+                            margin: 0 !important;
+                            padding: 0 !important;
+                            background: #fff;
+                            color: #000;
+                            font-family: 'Cairo', 'Arial', sans-serif;
+                            direction: rtl;
+                            text-align: center;
+                        }
+                        .ticket-page {
+                            width: 78mm;
+                            margin: 0 auto;
+                            padding: 10px 8px 16px 8px;
+                            box-sizing: border-box;
+                            page-break-after: always;
+                            break-after: page;
+                        }
+                        .ticket-page:last-child {
+                            page-break-after: avoid;
+                            break-after: avoid;
+                        }
+                        .ticket-header {
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            width: 100%;
+                            margin-bottom: 6px;
+                            padding-bottom: 5px;
+                            border-bottom: 1px solid #000;
+                        }
+                        .header-logo-side {
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                        }
+                        .header-logo-side.right-logo {
+                            width: 26%;
+                            transform: translateX(15px);
+                        }
+                        .header-logo-side.right-logo img {
+                            max-width: 25mm;
+                            max-height: 27mm;
+                            width: auto;
+                            height: auto;
+                            object-fit: contain;
+                            display: block;
+                        }
+                        .header-logo-side.left-logo {
+                            width: 22%;
+                            transform: translateX(-10px);
+                        }
+                        .header-logo-side.left-logo img {
+                            max-width: 16mm;
+                            max-height: 17mm;
+                            width: auto;
+                            height: auto;
+                            object-fit: contain;
+                            display: block;
+                        }
+                        .header-text-center {
+                            width: 52%;
+                            text-align: center;
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: center;
+                            align-items: center;
+                        }
+                        .church-title {
+                            font-size: 12px;
+                            font-weight: 800;
+                            line-height: 1.25;
+                            margin: 0 0 2px 0;
+                            color: #000;
+                            font-family: 'Cairo', sans-serif;
+                        }
+                        .festival-title {
+                            font-size: 11.5px;
+                            font-weight: 700;
+                            line-height: 1.25;
+                            margin: 0;
+                            color: #000;
+                            font-family: 'Cairo', sans-serif;
+                        }
+                        .title {
+                            font-size: 15px;
+                            font-weight: 900;
+                            margin-bottom: 2px;
+                            color: #000;
+                            font-family: 'Cairo', sans-serif;
+                        }
+                        .details {
+                            font-size: 10px;
+                            font-weight: 600;
+                            margin-bottom: 0px;
+                            color: #000;
+                        }
+                        .ticket-id {
+                            font-size: 17px;
+                            font-weight: 900;
+                            border-radius: 4px;
+                            padding: 3px 6px;
+                            display: inline-block;
+                            margin-top: 6px;
+                            margin-bottom: 2px;
+                            letter-spacing: 1px;
+                            background: #000;
+                            color: #fff;
+                            font-family: 'Cairo', 'Arial', monospace;
+                        }
+                        .ticket-barcode {
+                            margin-top: 4px;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                        }
+                        .ticket-barcode svg {
+                            max-width: 175px;
+                            height: 34px;
+                            display: block;
+                            margin: 0 auto;
+                        }
+                        .ticket-zone-img {
+                            margin-top: 5px;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                        }
+                        .ticket-zone-img img {
+                            max-width: 51mm;
+                            max-height: 35mm;
+                            width: auto;
+                            height: auto;
+                            display: block;
+                            margin: 0 auto;
+                            object-fit: contain;
+                        }
+                        .ticket-digital-access {
+                            margin-top: 5px;
+                            padding-top: 3px;
+                            border-top: 1px dashed #000;
+                            text-align: center;
+                            direction: rtl;
+                        }
+                        .access-title {
+                            font-size: 7.5px;
+                            font-weight: 800;
+                            color: #000;
+                            margin: 0 0 2px 0;
+                            font-family: 'Cairo', sans-serif;
+                            line-height: 1.25;
+                        }
+                        .access-creds {
+                            font-size: 8px;
+                            color: #000;
+                            margin: 0;
+                            font-family: 'Cairo', sans-serif;
+                        }
+                        .access-creds strong {
+                            font-family: 'Courier New', monospace;
+                            font-size: 8.5px;
+                            font-weight: 800;
+                            letter-spacing: 0.5px;
+                        }
+                        .ticket-qr {
+                            margin-top: 3px;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                        }
+                        .ticket-qr img {
+                            max-width: 32mm;
+                            max-height: 32mm;
+                            width: auto;
+                            height: auto;
+                            display: block;
+                            margin: 0 auto;
+                            object-fit: contain;
+                        }
+                        .ticket-warning-note {
+                            font-size: 7px;
+                            font-weight: 700;
+                            color: #000;
+                            margin: 3px 0 0 0;
+                            line-height: 1.2;
+                            font-family: 'Cairo', sans-serif;
+                        }
+                        @media print {
+                            html, body {
+                                margin: 0 !important;
+                                padding: 0 !important;
+                            }
+                            .ticket-page {
+                                page-break-after: always !important;
+                                break-after: page !important;
+                            }
+                            .ticket-page:last-child {
+                                page-break-after: avoid !important;
+                                break-after: avoid !important;
+                            }
+                            .ticket-header {
+                                display: flex !important;
+                                justify-content: space-between !important;
+                                align-items: center !important;
+                                width: 100% !important;
+                                margin-bottom: 6px !important;
+                                padding-bottom: 5px !important;
+                                border-bottom: 1px solid #000 !important;
+                            }
+                            .header-logo-side.right-logo {
+                                width: 26% !important;
+                                text-align: center !important;
+                                transform: translateX(15px) !important;
+                            }
+                            .header-logo-side.right-logo img {
+                                max-width: 25mm !important;
+                                max-height: 27mm !important;
+                                width: auto !important;
+                                height: auto !important;
+                                margin: 0 auto !important;
+                            }
+                            .header-logo-side.left-logo {
+                                width: 22% !important;
+                                text-align: center !important;
+                                transform: translateX(-10px) !important;
+                            }
+                            .header-logo-side.left-logo img {
+                                max-width: 16mm !important;
+                                max-height: 18mm !important;
+                                width: auto !important;
+                                height: auto !important;
+                                margin: 0 auto !important;
+                            }
+                            .header-text-center {
+                                width: 52% !important;
+                                text-align: center !important;
+                            }
+                            .church-title {
+                                font-size: 10px !important;
+                                line-height: 1.2 !important;
+                                margin-bottom: 2px !important;
+                                color: #000 !important;
+                            }
+                            .festival-title {
+                                font-size: 9.5px !important;
+                                line-height: 1.2 !important;
+                                color: #000 !important;
+                            }
+                            .ticket-zone-img {
+                                margin-top: 6px !important;
+                                text-align: center !important;
+                            }
+                            .ticket-zone-img img {
+                                max-width: 51mm !important;
+                                max-height: 35mm !important;
+                                width: auto !important;
+                                height: auto !important;
+                                margin: 0 auto !important;
+                            }
+                            .ticket-digital-access {
+                                margin-top: 6px !important;
+                                padding-top: 4px !important;
+                                border-top: 1px dashed #000 !important;
+                                text-align: center !important;
+                            }
+                            .access-title {
+                                font-size: 7.5px !important;
+                                color: #000 !important;
+                            }
+                            .access-creds {
+                                font-size: 8px !important;
+                                color: #000 !important;
+                            }
+                            .access-creds strong {
+                                font-size: 8.5px !important;
+                            }
+                            .ticket-qr {
+                                margin-top: 4px !important;
+                                text-align: center !important;
+                            }
+                            .ticket-qr img {
+                                max-width: 32mm !important;
+                                max-height: 32mm !important;
+                                width: auto !important;
+                                height: auto !important;
+                                margin: 0 auto !important;
+                            }
+                        }
+                    </style>
+                </head>
+                <body>
+                    ${pagesHtml}
+                </body>
+                </html>
+            `;
+        }
+
+        // Printer triggering logic
+        function triggerPrinter(ticketOrTickets) {
+            const tickets = Array.isArray(ticketOrTickets) ? ticketOrTickets : [ticketOrTickets];
+            const multiPageHtml = buildMultiPageTicketsHtml(tickets);
+            
+            // Detect Electron and send one single print order with all pages
+            if (window.electron && window.electron.printTicket) {
+                console.log(`Sending single print order containing ${tickets.length} ticket page(s) to Electron...`);
+                window.electron.printTicket(multiPageHtml);
+            } else {
+                // Fallback for regular web browsers: opens print window with all pages
+                console.log(`Triggering browser printing fallback for ${tickets.length} ticket(s)...`);
+                const printWindow = window.open('', '_blank', 'width=450,height=600');
+                if (printWindow) {
+                    printWindow.document.write(multiPageHtml);
+                    printWindow.document.close();
+                    printWindow.focus();
+                    setTimeout(() => {
+                        printWindow.print();
+                        printWindow.close();
+                    }, 400);
+                }
+            }
+        }
+
+        // Fetch logs for audit
+        function fetchLogs() {
+            fetch('/api/logs')
+                .then(res => res.json())
+                .then(data => {
+                    const tbody = document.getElementById('logs-table-body');
+                    if (!data || data.length === 0) {
+                        tbody.innerHTML = `
+                            <tr>
+                                <td colspan="7" class="px-6 py-6 text-center text-slate-500">لا توجد عمليات طباعة أو دخول مسجلة بالنظام حتى الآن.</td>
+                            </tr>
+                        `;
+                        document.getElementById('stat-tickets-printed').innerText = 0;
+                        return;
+                    }
+                    
+                    const printedCount = data.filter(l => l.action === 'PRINTED').length;
+                    document.getElementById('stat-tickets-printed').innerText = printedCount;
+                    
+                    let html = '';
+                    data.forEach(log => {
+                        const formattedDate = new Date(log.printed_at).toLocaleString('ar-EG');
+                        const ticketId = log.formatted_ticket_id || formatFullTicketId(log.show_prefix, log.zone_name, log.ticket_number);
+                        
+                        let actionBadge = '';
+                        if (log.action === 'PRINTED') {
+                            actionBadge = `<span class="bg-blue-50 text-blue-700 border border-blue-200 text-xs px-2.5 py-0.5 rounded-full font-bold inline-flex items-center gap-1.5"><i class="fa-solid fa-print text-[10px]"></i> طباعة تذكرة</span>`;
+                        } else if (log.action === 'ENTERED') {
+                            actionBadge = `<span class="bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs px-2.5 py-0.5 rounded-full font-bold inline-flex items-center gap-1.5"><i class="fa-solid fa-door-open text-[10px]"></i> دخول / تحقق</span>`;
+                        } else {
+                            actionBadge = `<span class="bg-slate-100 text-slate-700 text-xs px-2.5 py-0.5 rounded font-bold border border-slate-200">${log.action}</span>`;
+                        }
+
+                        html += `
+                            <tr class="hover:bg-slate-50 transition border-b border-slate-100">
+                                <td class="px-6 py-4 whitespace-nowrap text-slate-500 font-mono text-xs">#${log.id}</td>
+                                <td class="px-6 py-4 whitespace-nowrap font-bold text-slate-900">${log.show_name}</td>
+                                <td class="px-6 py-4 whitespace-nowrap"><span class="bg-blue-50 px-2.5 py-0.5 rounded text-xs font-bold text-blue-700 border border-blue-200">منطقة ${log.zone_name}</span></td>
+                                <td class="px-6 py-4 whitespace-nowrap font-mono text-emerald-700 font-bold">${ticketId}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-slate-600">${log.device_name || 'جهاز غير معروف'}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">${actionBadge}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-slate-500 font-mono text-xs">${formattedDate}</td>
+                            </tr>
+                        `;
+                    });
+                    tbody.innerHTML = html;
+                });
+        }
+
+        function triggerClearLogs() {
+            if (!confirm("هل أنت متأكد من مسح كافة سجلات الطباعة؟ لا يمكن التراجع عن هذا الإجراء وسيتم تصفير إحصائيات الطباعة.")) {
+                return;
+            }
+
+            fetch('/api/logs/clear', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    alert("تم مسح السجلات التاريخية بنجاح!");
+                    fetchLogs(); // Reload logs (sets stats to 0)
+                } else {
+                    alert("فشل مسح السجلات: " + data.error);
+                }
+            })
+            .catch(err => alert("خطأ في الاتصال بالخادم: " + err.message));
+        }
+
+        // Setup Show dynamic rows helper
+        function addZoneRow() {
+            const container = document.getElementById('setup-zones-container');
+            // Determine next alphabet letter for convenience
+            const currentRows = container.querySelectorAll('.zone-row');
+            let nextLetter = 'C';
+            if (currentRows.length > 0) {
+                const lastVal = currentRows[currentRows.length - 1].querySelector('.zone-name').value;
+                if (lastVal && lastVal.length === 1) {
+                    nextLetter = String.fromCharCode(lastVal.charCodeAt(0) + 1);
+                }
+            }
+
+            const row = document.createElement('div');
+            row.className = "zone-row grid grid-cols-1 sm:grid-cols-3 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200";
+            row.innerHTML = `
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">رمز المنطقة</label>
+                    <input type="text" value="${nextLetter}" required dir="ltr" class="zone-name w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 focus:outline-none focus:border-emerald-600 text-center">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">السعة الاستيعابية</label>
+                    <input type="number" required min="1" dir="ltr" style="direction: ltr !important; text-align: left !important; unicode-bidi: isolate !important;" class="zone-capacity w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 focus:outline-none focus:border-emerald-600 text-left">
+                </div>
+                <div class="flex items-end">
+                    <button type="button" onclick="removeZoneRow(this)" class="w-full bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 py-2 rounded-lg text-xs font-bold transition">حذف</button>
+                </div>
+            `;
+            container.appendChild(row);
+        }
+
+        function removeZoneRow(btn) {
+            const container = document.getElementById('setup-zones-container');
+            if (container.querySelectorAll('.zone-row').length <= 1) {
+                alert("يجب توفر فئة مقاعد واحدة على الأقل لأي عرض.");
+                return;
+            }
+            btn.closest('.zone-row').remove();
+        }
+
+        // Create new show submit handler
+        function handleCreateShow(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('setup-name').value.trim();
+            const prefix = document.getElementById('setup-prefix').value.trim();
+            const date = document.getElementById('setup-date').value;
+            const startTime = document.getElementById('setup-start-time').value;
+            const endTime = document.getElementById('setup-end-time').value;
+            
+            const zones = [];
+            document.querySelectorAll('.zone-row').forEach(row => {
+                const zone_name = row.querySelector('.zone-name').value.trim().toUpperCase();
+                const capacity = parseInt(row.querySelector('.zone-capacity').value);
+                if (zone_name && capacity > 0) {
+                    zones.push({ zone_name, capacity });
+                }
+            });
+
+            if (zones.length === 0) {
+                alert("يرجى تعيين فئة مقاعد صحيحة واحدة على الأقل.");
+                return;
+            }
+
+            fetch('/api/shows', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, prefix, date, time: startTime, startTime, endTime, zones })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    alert("تم حفظ العرض وإضافته بنجاح!");
+                    // Reset form
+                    document.getElementById('setup-name').value = '';
+                    document.getElementById('setup-prefix').value = '';
+                    document.getElementById('setup-date').value = '';
+                    document.getElementById('setup-start-time').value = '';
+                    document.getElementById('setup-end-time').value = '';
+                    
+                    // switch to dashboard
+                    switchTab('dashboard');
+                } else {
+                    alert("فشل الحفظ: " + data.error);
+                }
+            })
+            .catch(err => alert("خطأ في الاتصال بالخادم: " + err.message));
+        }
+
+        // Edit Show Details Modal Handlers
+        function openEditShowModal(showId) {
+            const show = allShows.find(s => s.id == showId);
+            if (!show) return;
+            document.getElementById('edit-show-id').value = show.id;
+            document.getElementById('edit-show-name').value = show.name;
+            document.getElementById('edit-show-prefix').value = show.prefix || '';
+            document.getElementById('edit-show-date').value = show.date;
+            document.getElementById('edit-show-start-time').value = show.time || '';
+            document.getElementById('edit-show-end-time').value = show.end_time || '';
+            document.getElementById('show-edit-modal').classList.remove('hidden');
+        }
+
+        function closeEditShowModal() {
+            document.getElementById('show-edit-modal').classList.add('hidden');
+        }
+
+        function saveShowConfiguration() {
+            const showId = document.getElementById('edit-show-id').value;
+            const name = document.getElementById('edit-show-name').value.trim();
+            const prefix = document.getElementById('edit-show-prefix').value.trim();
+            const date = document.getElementById('edit-show-date').value;
+            const startTime = document.getElementById('edit-show-start-time').value;
+            const endTime = document.getElementById('edit-show-end-time').value;
+
+            if (!name || !date || !startTime) {
+                alert("يرجى إدخال الحقول المطلوبة (اسم العرض، التاريخ، وقت البدء).");
+                return;
+            }
+
+            fetch('/api/shows/update', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: showId, name, prefix, date, time: startTime, startTime, endTime })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    closeEditShowModal();
+                    fetchShows(); // Refresh dashboard
+                } else {
+                    alert("فشل تحديث بيانات العرض: " + data.error);
+                }
+            })
+            .catch(err => alert("خطأ في الاتصال بالخادم: " + err.message));
+        }
+
+        function handleDeleteShow(showId, showName) {
+            if (!confirm(`هل أنت متأكد من رغبتك في حذف العرض المسرحي:\n"${showName || ('#' + showId)}"\n\nتحذير: سيتم حذف كافة المقاعد وسجلات التذاكر المرتبطة بهذا العرض نهائياً!`)) {
+                return;
+            }
+
+            fetch('/api/shows/delete', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: showId })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    alert("تم حذف العرض بنجاح.");
+                    fetchShows(); // Refresh dashboard & show lists
+                } else {
+                    alert("فشل حذف العرض: " + (data.error || data.message));
+                }
+            })
+            .catch(err => alert("خطأ في الاتصال بالخادم: " + err.message));
+        }
+
+        function deleteCurrentEditShow() {
+            const showId = document.getElementById('edit-show-id').value;
+            const showName = document.getElementById('edit-show-name').value;
+            if (!showId) return;
+            closeEditShowModal();
+            handleDeleteShow(showId, showName);
+        }
+
+        // Edit Seats Modal Handlers
+        let activeEditZone = null;
+
+        function openEditSeatsModal(zoneId, zoneName, totalCapacity, availableSeats) {
+            activeEditZone = { id: zoneId, name: zoneName, total: totalCapacity, available: availableSeats };
+            document.getElementById('edit-zone-title').innerText = `تعديل مقاعد المنطقة (${zoneName})`;
+            document.getElementById('edit-capacity').value = totalCapacity;
+            document.getElementById('edit-available').value = availableSeats;
+            document.getElementById('seats-edit-modal').classList.remove('hidden');
+        }
+
+        function closeEditSeatsModal() {
+            document.getElementById('seats-edit-modal').classList.add('hidden');
+            activeEditZone = null;
+        }
+
+        function resetSeatsToMax() {
+            if (!activeEditZone) return;
+            const cap = parseInt(document.getElementById('edit-capacity').value);
+            document.getElementById('edit-available').value = cap;
+        }
+
+        function saveSeatsConfiguration() {
+            if (!activeEditZone) return;
+            const capacity = parseInt(document.getElementById('edit-capacity').value);
+            const availableSeats = parseInt(document.getElementById('edit-available').value);
+
+            if (isNaN(capacity) || isNaN(availableSeats) || capacity < 0 || availableSeats < 0) {
+                alert("يرجى إدخال قيم صحيحة للمقاعد.");
+                return;
+            }
+            if (availableSeats > capacity) {
+                alert("لا يمكن أن يتجاوز عدد المقاعد المتاحة السعة الإجمالية.");
+                return;
+            }
+
+            fetch('/api/zones/update', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    zoneId: activeEditZone.id,
+                    capacity: capacity,
+                    availableSeats: availableSeats
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    closeEditSeatsModal();
+                    fetchShows(); // Refresh dashboard
+                } else {
+                    alert("فشل تحديث المقاعد: " + data.error);
+                }
+            })
+            .catch(err => alert("خطأ في الاتصال بالخادم: " + err.message));
+        }
+
+        // Refill all seats across all shows
+        function triggerRefillAllSeats() {
+            if (!confirm("هل أنت متأكد من إعادة ملء مقاعد جميع العروض والمناطق إلى السعة الكاملة القصوى؟")) {
+                return;
+            }
+
+            fetch('/api/zones/refill-all', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    alert("تمت إعادة ملء مقاعد جميع العروض بنجاح!");
+                    fetchShows();
+                } else {
+                    alert("فشل إعادة الملء: " + (data.error || data.message));
+                }
+            })
+            .catch(err => alert("خطأ في الاتصال بالخادم: " + err.message));
+        }
+
+        // ==================== ENTRANCE GATE & SCANNER LOGIC ====================
+        let gateSoundEnabled = true;
+        let gateDuplicateCount = 0;
+        let gateWrongShowCount = 0;
+
+        function toggleGateSound() {
+            gateSoundEnabled = !gateSoundEnabled;
+            const icon = document.getElementById('gate-sound-icon');
+            const text = document.getElementById('gate-sound-text');
+            if (gateSoundEnabled) {
+                icon.className = "fa-solid fa-volume-high text-emerald-400";
+                text.innerText = "الأصوات: مفعّلة";
+            } else {
+                icon.className = "fa-solid fa-volume-xmark text-slate-500";
+                text.innerText = "الأصوات: مكتومة";
+            }
+        }
+
+        function populateGateShowSelect(shows) {
+            const showList = shows || allShows;
+            const selectEl = document.getElementById('gate-show-select');
+            if (!selectEl) return;
+
+            const currentVal = selectEl.value;
+            let optionsHtml = `<option value="" disabled ${!currentVal ? 'selected' : ''}>-- اختر العرض المسرحي المراد مسح تذاكره --</option>`;
+
+            if (showList && Array.isArray(showList)) {
+                showList.forEach(s => {
+                    const prefixTag = s.prefix ? `[كود ${s.prefix}] ` : '';
+                    const timeLabel = formatShowTimeRange(s.time, s.end_time);
+                    optionsHtml += `<option value="${s.id}">${prefixTag}${s.name} (${s.date} | ${timeLabel})</option>`;
+                });
+            }
+
+            selectEl.innerHTML = optionsHtml;
+            if (currentVal && Array.from(selectEl.options).some(o => o.value === currentVal)) {
+                selectEl.value = currentVal;
+            } else if (showList && showList.length > 0 && !currentVal) {
+                selectEl.value = showList[0].id;
+            }
+        }
+
+        function onGateShowChange() {
+            clearGateInput();
+        }
+
+        function playGateSound(type) {
+            if (!gateSoundEnabled) return;
+            try {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (!AudioCtx) return;
+                const ctx = new AudioCtx();
+
+                if (type === 'valid') {
+                    // Two-tone rising chime (D5 -> A5)
+                    const osc1 = ctx.createOscillator();
+                    const osc2 = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    
+                    osc1.type = 'sine';
+                    osc1.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
+                    osc2.type = 'sine';
+                    osc2.frequency.setValueAtTime(880.00, ctx.currentTime + 0.12); // A5
+
+                    gain.gain.setValueAtTime(0.3, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6);
+
+                    osc1.connect(gain);
+                    osc2.connect(gain);
+                    gain.connect(ctx.destination);
+
+                    osc1.start(ctx.currentTime);
+                    osc1.stop(ctx.currentTime + 0.12);
+                    osc2.start(ctx.currentTime + 0.12);
+                    osc2.stop(ctx.currentTime + 0.6);
+                } else if (type === 'wrong_show') {
+                    // 3-tone caution warning chime (A4 -> C5 -> A4)
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(440, ctx.currentTime);
+                    osc.frequency.setValueAtTime(523.25, ctx.currentTime + 0.15);
+                    osc.frequency.setValueAtTime(440, ctx.currentTime + 0.3);
+
+                    gain.gain.setValueAtTime(0.35, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6);
+
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(ctx.currentTime);
+                    osc.stop(ctx.currentTime + 0.6);
+                } else if (type === 'duplicate') {
+                    // Warning tone (Sawtooth buzz)
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(240, ctx.currentTime);
+                    osc.frequency.setValueAtTime(180, ctx.currentTime + 0.2);
+
+                    gain.gain.setValueAtTime(0.35, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.55);
+
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(ctx.currentTime);
+                    osc.stop(ctx.currentTime + 0.55);
+                } else {
+                    // Invalid low double buzz
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'square';
+                    osc.frequency.setValueAtTime(130, ctx.currentTime);
+
+                    gain.gain.setValueAtTime(0.3, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(ctx.currentTime);
+                    osc.stop(ctx.currentTime + 0.4);
+                }
+            } catch (err) {
+                console.log("Audio playback note:", err);
+            }
+        }
+
+        function clearGateInput() {
+            const inp = document.getElementById('gate-code-input');
+            if (inp) {
+                inp.value = '';
+                inp.focus();
+            }
+        }
+
+        function handleGateScan(e) {
+            if (e) e.preventDefault();
+            const inputEl = document.getElementById('gate-code-input');
+            const code = (inputEl ? inputEl.value : '').trim();
+            if (!code) return;
+
+            const activeShowSelect = document.getElementById('gate-show-select');
+            const activeShowId = activeShowSelect ? activeShowSelect.value : '';
+            if (!activeShowId) {
+                alert("يرجى اختيار العرض المطلوب مسح تذاكره من القائمة المنسدلة أعلى البوابة أولاً.");
+                return;
+            }
+
+            const btn = document.getElementById('btn-gate-verify');
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري التحقق...';
+            }
+
+            fetch('/api/tickets/verify', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    code: code,
+                    activeShowId: activeShowId,
+                    deviceId: activeDevice.id,
+                    deviceName: activeDevice.name
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'VALID') {
+                    playGateSound('valid');
+                    renderGateHeroResult('VALID', data, code);
+                } else if (data.status === 'WRONG_SHOW') {
+                    playGateSound('wrong_show');
+                    gateWrongShowCount++;
+                    const statEl = document.getElementById('gate-stat-wrong-shows');
+                    if (statEl) statEl.innerText = gateWrongShowCount;
+                    renderGateHeroResult('WRONG_SHOW', data, code);
+                } else if (data.status === 'ALREADY_ENTERED') {
+                    playGateSound('duplicate');
+                    gateDuplicateCount++;
+                    const statEl = document.getElementById('gate-stat-duplicates');
+                    if (statEl) statEl.innerText = gateDuplicateCount;
+                    renderGateHeroResult('ALREADY_ENTERED', data, code);
+                } else {
+                    playGateSound('invalid');
+                    renderGateHeroResult('INVALID', data, code);
+                }
+
+                // Refresh gate counters & live feed
+                fetchGateStats();
+            })
+            .catch(err => {
+                playGateSound('invalid');
+                renderGateHeroResult('INVALID', { message: 'خطأ في الاتصال بالخادم: ' + err.message }, code);
+            })
+            .finally(() => {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fa-solid fa-check-double"></i> تحقق من الدخول';
+                }
+                // Clear input and immediately restore focus for next ticket
+                if (inputEl) {
+                    inputEl.value = '';
+                    inputEl.focus();
+                }
+            });
+        }
+
+        function renderGateHeroResult(status, data, code) {
+            const heroCard = document.getElementById('gate-hero-card');
+            if (!heroCard) return;
+
+            if (status === 'VALID') {
+                const ticketTime = data.ticket ? formatShowTimeRange(data.ticket.showTime, data.ticket.showEndTime) : '-';
+                heroCard.className = "bg-gradient-to-br from-emerald-50 via-white to-slate-50 border-2 border-emerald-500 rounded-3xl p-8 shadow-xl shadow-emerald-500/10 transition-all duration-300";
+                heroCard.innerHTML = `
+                    <div class="text-center animate-fade-in">
+                        <div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-emerald-100 text-emerald-600 mb-3 border-2 border-emerald-500 shadow-lg shadow-emerald-500/15 animate-pulse">
+                            <i class="fa-solid fa-circle-check text-5xl"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-3xl font-black text-emerald-700 mb-1">تذكرة صالحة ومؤكدة ✅</h2>
+                            <p class="text-xs text-slate-600 mb-5">تم تسجيل الدخول وتوثيق الحضور بنجاح في قاعدة البيانات</p>
+                        </div>
+
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 bg-white p-5 rounded-2xl border border-emerald-200 text-right shadow-sm">
+                            <div>
+                                <p class="text-[11px] text-slate-500 font-bold mb-0.5">العرض المسرحي</p>
+                                <p class="text-base font-black text-slate-900">${data.ticket ? data.ticket.showName : '-'}</p>
+                            </div>
+                            <div>
+                                <p class="text-[11px] text-slate-500 font-bold mb-0.5">المنطقة والفئة</p>
+                                <p class="text-base font-black text-emerald-700">منطقة ${data.ticket ? data.ticket.zoneName : '-'}</p>
+                            </div>
+                            <div>
+                                <p class="text-[11px] text-slate-500 font-bold mb-0.5">رقم التذكرة</p>
+                                <p class="text-base font-mono font-black text-slate-900 bg-slate-100 px-3 py-1 rounded-lg border border-slate-300 inline-block">${data.ticket ? data.ticket.ticketId : code}</p>
+                            </div>
+                            <div>
+                                <p class="text-[11px] text-slate-500 font-bold mb-0.5">موعد العرض</p>
+                                <p class="text-sm font-bold text-slate-700">${data.ticket ? data.ticket.showDate + ' (' + ticketTime + ')' : '-'}</p>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 flex flex-wrap items-center justify-center gap-4 text-xs text-slate-500">
+                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-clock text-emerald-600"></i> وقت الدخول: <strong class="text-slate-800 font-mono">${data.admittedAt || new Date().toLocaleTimeString()}</strong></span>
+                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-barcode text-blue-600"></i> الكود: <strong class="text-slate-800 font-mono">${code}</strong></span>
+                        </div>
+                    </div>
+                `;
+            } else if (status === 'WRONG_SHOW') {
+                const ticketTime = data.ticket ? formatShowTimeRange(data.ticket.showTime, data.ticket.showEndTime) : '-';
+                const targetTime = data.targetShow ? formatShowTimeRange(data.targetShow.time, data.targetShow.endTime) : '-';
+                heroCard.className = "bg-gradient-to-br from-indigo-50 via-white to-purple-50 border-2 border-indigo-500 rounded-3xl p-8 shadow-xl shadow-indigo-500/10 transition-all duration-300";
+                heroCard.innerHTML = `
+                    <div class="text-center animate-fade-in">
+                        <div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-indigo-100 text-indigo-600 mb-3 border-2 border-indigo-500 shadow-lg shadow-indigo-500/15 animate-bounce">
+                            <i class="fa-solid fa-calendar-xmark text-5xl"></i>
+                        </div>
+                        <div>
+                            <span class="inline-block bg-indigo-100 text-indigo-800 border border-indigo-300 px-4 py-1 rounded-full text-xs font-black mb-2 shadow-sm">
+                                <i class="fa-solid fa-clock-rotate-left"></i> تنبيه: موعد العرض مختلف
+                            </span>
+                            <h2 class="text-3xl font-black text-indigo-900 mb-1">تذكرة لعرض آخر! ⚠️</h2>
+                            <p class="text-xs text-indigo-700/80 mb-5 font-semibold">لم يتم تسجيل الدخول، والتذكرة صالحة ومحفوظة ويمكن للزائر استخدامها في موعد عرضها الصحيح</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white p-5 rounded-2xl border border-indigo-200 text-right shadow-sm">
+                            <!-- Ticket's Scheduled Show -->
+                            <div class="p-3.5 bg-indigo-50/60 rounded-xl border border-indigo-200">
+                                <p class="text-[11px] text-indigo-700 font-extrabold mb-1 flex items-center gap-1">
+                                    <i class="fa-solid fa-ticket"></i> بيانات تذكرة الزائر
+                                </p>
+                                <p class="text-base font-black text-slate-900 mb-1">${data.ticket ? data.ticket.showName : '-'}</p>
+                                <p class="text-xs text-slate-600 font-bold mb-1"><i class="fa-solid fa-calendar-day text-indigo-500"></i> ${data.ticket ? data.ticket.showDate + ' | ' + ticketTime : '-'}</p>
+                                <p class="text-xs font-mono font-bold text-indigo-800"><span class="bg-indigo-100 px-2 py-0.5 rounded">منطقة ${data.ticket ? data.ticket.zoneName : '-'}</span> &nbsp; رقم: <span class="bg-white px-2 py-0.5 rounded border border-indigo-300 font-black">${data.ticket ? data.ticket.ticketId : code}</span></p>
+                            </div>
+
+                            <!-- Gate's Active Show -->
+                            <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200 flex flex-col justify-between">
+                                <div>
+                                    <p class="text-[11px] text-slate-500 font-extrabold mb-1 flex items-center gap-1">
+                                        <i class="fa-solid fa-door-open"></i> العرض المحدد حالياً بالبوابة
+                                    </p>
+                                    <p class="text-sm font-black text-slate-800 mb-1">${data.targetShow ? data.targetShow.name : '-'}</p>
+                                    <p class="text-xs text-slate-500 font-medium">${data.targetShow ? data.targetShow.date + ' | ' + targetTime : '-'}</p>
+                                </div>
+                                <div class="mt-2 text-[11px] text-amber-700 font-bold bg-amber-50 p-2 rounded-lg border border-amber-200">
+                                    <i class="fa-solid fa-circle-exclamation"></i> يرجى إرشاد الزائر للحضور في موعد تذكرته الموضح
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 flex flex-wrap items-center justify-center gap-4 text-xs text-indigo-800/80">
+                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-barcode"></i> الكود: <strong class="text-slate-900 font-mono font-bold">${code}</strong></span>
+                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-shield-halved text-emerald-600"></i> حالة التذكرة: <strong class="text-emerald-700 font-bold">صالحة ومحفوظة (لم تُمسح)</strong></span>
+                        </div>
+                    </div>
+                `;
+            } else if (status === 'ALREADY_ENTERED') {
+                heroCard.className = "bg-gradient-to-br from-amber-50 via-white to-red-50 border-2 border-amber-500 rounded-3xl p-8 shadow-xl shadow-amber-500/10 transition-all duration-300";
+                heroCard.innerHTML = `
+                    <div class="text-center animate-fade-in">
+                        <div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-amber-100 text-amber-600 mb-3 border-2 border-amber-500 shadow-lg shadow-amber-500/15 animate-bounce">
+                            <i class="fa-solid fa-triangle-exclamation text-5xl"></i>
+                        </div>
+                        <div>
+                            <span class="inline-block bg-amber-100 text-amber-800 border border-amber-300 px-4 py-1 rounded-full text-xs font-black mb-2 shadow-sm">
+                                <i class="fa-solid fa-ban"></i> تنبيه: محاولة دخول مكررة
+                            </span>
+                            <h2 class="text-3xl font-black text-amber-800 mb-1">تم الدخول بهذه التذكرة مسبقاً! ⚠️</h2>
+                            <p class="text-xs text-amber-700/80 mb-5">هذه التذكرة تم استخدامها وتسجيل دخولها بالفعل ولا يمكن الدخول بها مجدداً</p>
+                        </div>
+
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 bg-white p-5 rounded-2xl border border-amber-200 text-right shadow-sm">
+                            <div>
+                                <p class="text-[11px] text-slate-500 font-bold mb-0.5">العرض المسرحي</p>
+                                <p class="text-base font-black text-slate-900">${data.ticket ? data.ticket.showName : '-'}</p>
+                            </div>
+                            <div>
+                                <p class="text-[11px] text-slate-500 font-bold mb-0.5">المنطقة والفئة</p>
+                                <p class="text-base font-black text-amber-700">منطقة ${data.ticket ? data.ticket.zoneName : '-'}</p>
+                            </div>
+                            <div>
+                                <p class="text-[11px] text-slate-500 font-bold mb-0.5">رقم التذكرة</p>
+                                <p class="text-base font-mono font-black text-slate-900 bg-slate-100 px-3 py-1 rounded-lg border border-slate-300 inline-block">${data.ticket ? data.ticket.ticketId : code}</p>
+                            </div>
+                            <div>
+                                <p class="text-[11px] text-slate-500 font-bold mb-0.5">تاريخ ووقت أول دخول</p>
+                                <p class="text-xs font-mono font-bold text-red-600">${data.firstEnteredAt || 'مسجل مسبقاً'}</p>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 flex flex-wrap items-center justify-center gap-4 text-xs text-amber-800/80">
+                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-door-open"></i> تم الدخول من: <strong class="text-slate-900 font-bold">${data.gateDeviceName || 'البوابة الإلكترونية'}</strong></span>
+                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-barcode"></i> الكود: <strong class="text-slate-900 font-mono font-bold">${code}</strong></span>
+                        </div>
+                    </div>
+                `;
+            } else {
+                // INVALID
+                heroCard.className = "bg-gradient-to-br from-red-50 via-white to-slate-50 border-2 border-red-500 rounded-3xl p-8 shadow-xl shadow-red-500/10 transition-all duration-300";
+                heroCard.innerHTML = `
+                    <div class="text-center animate-fade-in">
+                        <div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-red-100 text-red-600 mb-3 border-2 border-red-500 shadow-lg shadow-red-500/15">
+                            <i class="fa-solid fa-circle-xmark text-5xl"></i>
+                        </div>
+                        <div>
+                            <span class="inline-block bg-red-100 text-red-800 border border-red-300 px-4 py-1 rounded-full text-xs font-black mb-2 shadow-sm">
+                                <i class="fa-solid fa-triangle-exclamation"></i> غير مصرح بالدخول
+                            </span>
+                            <h2 class="text-3xl font-black text-red-700 mb-1">تذكرة غير صالحة ❌</h2>
+                            <p class="text-sm font-bold text-slate-700 mb-5 max-w-md mx-auto">${data.message || 'لم يتم بيع هذه التذكرة أو الكود غير مسجل في النظام'}</p>
+                        </div>
+
+                        <div class="bg-white border border-red-300 p-4 rounded-2xl inline-block max-w-sm mx-auto shadow-sm">
+                            <p class="text-xs text-slate-500 mb-1">الكود المفحوص</p>
+                            <p class="text-lg font-mono font-bold text-red-600">${code}</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function fetchGateStats() {
+            fetch('/api/gate/stats')
+                .then(res => res.json())
+                .then(data => {
+                    const elEntered = document.getElementById('gate-stat-entered');
+                    const elPrinted = document.getElementById('gate-stat-printed');
+                    if (elEntered) elEntered.innerText = data.totalEntered || 0;
+                    if (elPrinted) elPrinted.innerText = data.totalPrinted || 0;
+
+                    renderGateRecentLogs(data.recentAdmissions || []);
+                })
+                .catch(err => console.log("Gate stats error:", err));
+        }
+
+        function renderGateRecentLogs(logs) {
+            const tbody = document.getElementById('gate-recent-logs-body');
+            if (!tbody) return;
+
+            if (logs.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="text-center py-6 text-slate-500">لا توجد عمليات دخول مسجلة حتى الآن</td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = logs.map(l => {
+                const dateObj = new Date(l.printed_at);
+                const timeStr = dateObj.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                const dateStr = dateObj.toLocaleDateString('ar-EG');
+                const zoneDigit = getZoneDigit(l.zone_name);
+                const prefix = l.show_prefix || '';
+                const formattedTicketId = `${l.zone_name} - ${prefix}${zoneDigit}${String(l.ticket_number).padStart(3, '0')}`;
+
+                return `
+                    <tr class="hover:bg-slate-50 transition border-b border-slate-100">
+                        <td class="px-5 py-3">
+                            <span class="bg-emerald-50 text-emerald-700 border border-emerald-200 text-[11px] px-2.5 py-0.5 rounded-full font-bold">
+                                <i class="fa-solid fa-check text-[10px]"></i> مصرح بالدخول
+                            </span>
+                        </td>
+                        <td class="px-5 py-3 font-mono font-bold text-slate-900">${formattedTicketId}</td>
+                        <td class="px-5 py-3 font-bold text-slate-800">${l.show_name}</td>
+                        <td class="px-5 py-3"><span class="bg-blue-50 px-2 py-0.5 rounded font-bold text-xs text-blue-700 border border-blue-200">منطقة ${l.zone_name}</span></td>
+                        <td class="px-5 py-3 text-xs text-slate-600 font-mono">${dateStr} ${timeStr}</td>
+                        <td class="px-5 py-3 text-xs text-slate-500">${l.device_name || 'البوابة الإلكترونية'}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // ==================== AUTH & USER MANAGEMENT FUNCTIONS ====================
+        function showAuthView() {
+            document.getElementById('app-view').classList.add('hidden');
+            document.getElementById('auth-view').classList.remove('hidden');
+            const userInp = document.getElementById('login-username');
+            if (userInp) userInp.focus();
+        }
+
+        function handleAppLogin(e) {
+            if (e) e.preventDefault();
+            const usernameInput = document.getElementById('login-username');
+            const passwordInput = document.getElementById('login-password');
+            const errorBox = document.getElementById('auth-error-box');
+            const errorMsg = document.getElementById('auth-error-msg');
+            const submitBtn = document.getElementById('btn-login-submit');
+
+            const username = usernameInput ? usernameInput.value.trim() : '';
+            const password = passwordInput ? passwordInput.value.trim() : '';
+
+            if (!username || !password) return;
+
+            if (errorBox) errorBox.classList.add('hidden');
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري التحقق...';
+            }
+
+            fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            })
+            .then(res => res.json().then(data => ({ status: res.status, data })))
+            .then(({ status, data }) => {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<span>دخول للنظام</span><i class="fa-solid fa-arrow-left"></i>';
+                }
+                if (status === 200 && data.success && data.user) {
+                    sessionStorage.setItem('theatre_user', JSON.stringify(data.user));
+                    if (passwordInput) passwordInput.value = '';
+                    applyUserPermissions(data.user);
+                } else {
+                    if (errorBox && errorMsg) {
+                        errorMsg.innerText = data.error || 'اسم المستخدم أو كلمة المرور غير صحيحة';
+                        errorBox.classList.remove('hidden');
+                    }
+                }
+            })
+            .catch(err => {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<span>دخول للنظام</span><i class="fa-solid fa-arrow-left"></i>';
+                }
+                if (errorBox && errorMsg) {
+                    errorMsg.innerText = 'خطأ في الاتصال بالخادم: ' + err.message;
+                    errorBox.classList.remove('hidden');
+                }
+            });
+        }
+
+        function handleLogout() {
+            if (confirm("هل تريد بالتأكيد تسجيل الخروج من النظام؟")) {
+                sessionStorage.removeItem('theatre_user');
+                currentUser = null;
+                showAuthView();
+            }
+        }
+
+        function applyUserPermissions(user) {
+            currentUser = user;
+            
+            // Show/hide menu items based on role
+            enforceNavPermissions();
+
+            // Action buttons visibility control (Superuser only)
+            const isSuper = user && user.role === 'superuser';
+            const refillBtn = document.getElementById('btn-refill-all-seats');
+            if (refillBtn) {
+                refillBtn.style.display = isSuper ? 'inline-flex' : 'none';
+                if (isSuper) refillBtn.classList.remove('hidden'); else refillBtn.classList.add('hidden');
+            }
+
+            const clearLogsBtn = document.getElementById('btn-clear-audit-logs');
+            if (clearLogsBtn) {
+                clearLogsBtn.style.display = isSuper ? 'inline-flex' : 'none';
+                if (isSuper) clearLogsBtn.classList.remove('hidden'); else clearLogsBtn.classList.add('hidden');
+            }
+
+            // Show app view and switch to default tab (Dashboard for superuser, Print for all others)
+            document.getElementById('auth-view').classList.add('hidden');
+            document.getElementById('app-view').classList.remove('hidden');
+
+            const defaultTab = (user.role === 'superuser') ? 'dashboard' : 'print';
+            switchTab(defaultTab);
+        }
+
+        // ==================== USER MANAGEMENT LOGIC (SUPERUSER) ====================
+        function fetchUsersList() {
+            if (!currentUser || currentUser.role !== 'superuser') return;
+
+            fetch('/api/users')
+                .then(res => res.json())
+                .then(users => {
+                    const tbody = document.getElementById('users-table-body');
+                    if (!tbody) return;
+                    if (!users || users.length === 0) {
+                        tbody.innerHTML = `<tr><td colspan="6" class="text-center py-6 text-slate-500">لا يوجد مستخدمين مسجلين</td></tr>`;
+                        return;
+                    }
+
+                    let html = '';
+                    users.forEach(u => {
+                        const dateStr = u.createdAt ? new Date(u.createdAt).toLocaleDateString('ar-EG') : '-';
+                        const badgeStyle = ROLE_BADGES[u.role] || 'bg-slate-100 text-slate-700';
+                        const roleTitle = ROLE_TITLES[u.role] || u.role;
+                        const isSelf = currentUser && currentUser.id === u.id;
+
+                        html += `
+                            <tr class="hover:bg-slate-50 transition border-b border-slate-100">
+                                <td class="px-6 py-4 text-slate-500 font-mono text-xs">#${u.id}</td>
+                                <td class="px-6 py-4 font-bold text-slate-900 font-mono">${u.username}</td>
+                                <td class="px-6 py-4 font-bold text-slate-800">${u.fullName}</td>
+                                <td class="px-6 py-4">
+                                    <span class="${badgeStyle} text-xs px-2.5 py-0.5 rounded-full font-bold inline-block">${roleTitle}</span>
+                                </td>
+                                <td class="px-6 py-4 text-xs text-slate-500 font-mono">${dateStr}</td>
+                                <td class="px-6 py-4 text-center">
+                                    ${isSelf ? '<span class="text-xs text-slate-400 font-semibold">(حسابك الحالي)</span>' : `
+                                        <button onclick="deleteUserAccount(${u.id}, '${u.username}')" class="bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 px-2.5 py-1 rounded-lg text-xs font-bold transition">
+                                            <i class="fa-solid fa-trash-can"></i> حذف
+                                        </button>
+                                    `}
+                                </td>
+                            </tr>
+                        `;
+                    });
+                    tbody.innerHTML = html;
+                })
+                .catch(err => {
+                    console.error("Error fetching users:", err);
+                });
+        }
+
+        function openCreateUserModal() {
+            const errBox = document.getElementById('create-user-error-box');
+            if (errBox) errBox.classList.add('hidden');
+            document.getElementById('new-user-username').value = '';
+            document.getElementById('new-user-fullname').value = '';
+            document.getElementById('new-user-password').value = '';
+            document.getElementById('new-user-role').value = 'ticket_seller';
+            document.getElementById('user-create-modal').classList.remove('hidden');
+        }
+
+        function closeCreateUserModal() {
+            document.getElementById('user-create-modal').classList.add('hidden');
+        }
+
+        function handleCreateUser(e) {
+            if (e) e.preventDefault();
+            const username = document.getElementById('new-user-username').value.trim();
+            const fullName = document.getElementById('new-user-fullname').value.trim();
+            const password = document.getElementById('new-user-password').value.trim();
+            const role = document.getElementById('new-user-role').value;
+            const errBox = document.getElementById('create-user-error-box');
+            const errText = document.getElementById('create-user-error-msg');
+
+            if (!username || !fullName || !password) return;
+
+            fetch('/api/users', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, fullName, password, role })
+            })
+            .then(res => res.json().then(data => ({ status: res.status, data })))
+            .then(({ status, data }) => {
+                if (status === 200 && data.success) {
+                    closeCreateUserModal();
+                    alert("تم إنشاء حساب المستخدم بنجاح!");
+                    fetchUsersList();
+                } else {
+                    if (errBox && errText) {
+                        errText.innerText = data.error || 'فشل إنشاء المستخدم';
+                        errBox.classList.remove('hidden');
+                    }
+                }
+            })
+            .catch(err => {
+                if (errBox && errText) {
+                    errText.innerText = 'خطأ في الاتصال: ' + err.message;
+                    errBox.classList.remove('hidden');
+                }
+            });
+        }
+
+        function deleteUserAccount(userId, username) {
+            if (!confirm(`هل أنت متأكد من رغبتك في حذف حساب المستخدم "${username}" نهائياً؟`)) {
+                return;
+            }
+
+            fetch('/api/users/delete', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    alert("تم حذف المستخدم بنجاح!");
+                    fetchUsersList();
+                } else {
+                    alert("فشل حذف المستخدم: " + data.error);
+                }
+            })
+            .catch(err => alert("خطأ في الاتصال: " + err.message));
+        }
+
+        // Global keydown listener on Gate tab to ensure barcode scanner keystrokes always hit the input
+        document.addEventListener('keydown', (e) => {
+            if (currentTab === 'gate') {
+                const inp = document.getElementById('gate-code-input');
+                if (inp && document.activeElement !== inp && e.key.length === 1 && !e.ctrlKey && !e.altKey && !e.metaKey) {
+                    inp.focus();
+                }
+            }
+        });
+
+        // Initialize App
+        window.addEventListener('DOMContentLoaded', () => {
+            initDevice();
+            // Check session
+            localStorage.removeItem('theatre_user'); // Clean up old persistent sessions
+            const savedUserStr = sessionStorage.getItem('theatre_user');
+            if (savedUserStr) {
+                try {
+                    const savedUser = JSON.parse(savedUserStr);
+                    applyUserPermissions(savedUser);
+                } catch(e) {
+                    showAuthView();
+                }
+            } else {
+                showAuthView();
+            }
+
+            // Detect Electron and update status
+            const badge = document.getElementById('print-badge');
+            const statusText = document.getElementById('print-method-status');
+            if (window.electron && window.electron.printTicket) {
+                badge.innerText = "صامت (تلقائي)";
+                badge.className = "bg-emerald-600 text-white text-xs px-2.5 py-1 rounded-lg font-bold shadow-md shadow-emerald-500/20";
+                statusText.innerText = "متصل بمشغل Electron للطباعة المباشرة";
+            } else {
+                badge.innerText = "المتصفح (حوار افتراضي)";
+                badge.className = "bg-slate-200 text-slate-700 border border-slate-300 text-xs px-2.5 py-1 rounded-lg font-bold";
+                statusText.innerText = "يعمل كمتصفح ويب عادي (سيظهر حوار التأكيد)";
+            }
+        });
+    </script>
+</body>
+</html>
