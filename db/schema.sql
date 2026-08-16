@@ -11,7 +11,8 @@ CREATE TABLE shows (
     prefix VARCHAR(50) DEFAULT '',
     date DATE NOT NULL,
     time VARCHAR(50) NOT NULL, -- Start time e.g. "18:30"
-    end_time VARCHAR(50) DEFAULT '' -- End time e.g. "20:00"
+    end_time VARCHAR(50) DEFAULT '', -- End time e.g. "20:00"
+    is_gate_active BOOLEAN DEFAULT TRUE -- Whether show appears in gate check-in dropdown for sellers
 );
 
 -- Zones Table

@@ -172,6 +172,10 @@ class TheatreHTTPHandler(BaseHTTPRequestHandler):
             self.handle_update_show(body)
         elif self.path == '/api/shows/delete':
             self.handle_delete_show(body)
+        elif self.path == '/api/shows/toggle-gate':
+            self.handle_toggle_gate_show(body)
+        elif self.path == '/api/shows/batch-gate':
+            self.handle_batch_gate_shows(body)
         elif self.path == '/api/devices/register':
             self.handle_register_device(body)
         elif self.path == '/api/tickets/print':
@@ -253,7 +257,7 @@ class TheatreHTTPHandler(BaseHTTPRequestHandler):
         conn = None
         try:
             conn = get_db_connection()
-            shows = query_as_dicts(conn, "SELECT id, name, prefix, date, time, end_time FROM shows ORDER BY date ASC, time ASC, id ASC")
+            shows = query_as_dicts(conn, "SELECT id, name, prefix, date, time, end_time, COALESCE(is_gate_active, TRUE) as is_gate_active FROM shows ORDER BY date ASC, time ASC, id ASC")
             for show in shows:
                 zones = query_as_dicts(
                     conn,
@@ -274,6 +278,7 @@ class TheatreHTTPHandler(BaseHTTPRequestHandler):
         date_val = body.get("date")
         time_val = body.get("time") or body.get("startTime")
         end_time_val = body.get("endTime") or body.get("end_time") or ""
+        is_gate_active = body.get("is_gate_active", True)
         zones = body.get("zones", [])
 
         if not name or not date_val or not time_val or not zones:
@@ -286,8 +291,8 @@ class TheatreHTTPHandler(BaseHTTPRequestHandler):
             cursor = conn.cursor()
             
             cursor.execute(
-                "INSERT INTO shows (name, prefix, date, time, end_time) VALUES (%s, %s, %s, %s, %s) RETURNING id;",
-                [name, prefix, date_val, time_val, end_time_val]
+                "INSERT INTO shows (name, prefix, date, time, end_time, is_gate_active) VALUES (%s, %s, %s, %s, %s, %s) RETURNING id;",
+                [name, prefix, date_val, time_val, end_time_val, bool(is_gate_active)]
             )
             show_id = cursor.fetchone()[0]
             
@@ -319,6 +324,7 @@ class TheatreHTTPHandler(BaseHTTPRequestHandler):
         date_val = body.get("date")
         time_val = body.get("time") or body.get("startTime")
         end_time_val = body.get("endTime") or body.get("end_time") or ""
+        is_gate_active = body.get("is_gate_active")
 
         if not show_id or not name or not date_val or not time_val:
             self.send_json({"error": "Missing required fields"}, 400)
@@ -328,16 +334,83 @@ class TheatreHTTPHandler(BaseHTTPRequestHandler):
         try:
             conn = get_db_connection()
             cursor = conn.cursor()
-            cursor.execute(
-                """
-                UPDATE shows 
-                SET name = %s, prefix = %s, date = %s, time = %s, end_time = %s 
-                WHERE id = %s;
-                """,
-                [name, prefix, date_val, time_val, end_time_val, int(show_id)]
-            )
+            if is_gate_active is not None:
+                cursor.execute(
+                    """
+                    UPDATE shows 
+                    SET name = %s, prefix = %s, date = %s, time = %s, end_time = %s, is_gate_active = %s
+                    WHERE id = %s;
+                    """,
+                    [name, prefix, date_val, time_val, end_time_val, bool(is_gate_active), int(show_id)]
+                )
+            else:
+                cursor.execute(
+                    """
+                    UPDATE shows 
+                    SET name = %s, prefix = %s, date = %s, time = %s, end_time = %s 
+                    WHERE id = %s;
+                    """,
+                    [name, prefix, date_val, time_val, end_time_val, int(show_id)]
+                )
             conn.commit()
             self.send_json({"success": True, "message": "Show updated successfully"})
+        except Exception as e:
+            if conn:
+                try:
+                    conn.rollback()
+                except:
+                    pass
+            self.send_json({"error": "Database error: " + str(e)}, 500)
+        finally:
+            if conn:
+                conn.close()
+
+    def handle_toggle_gate_show(self, body):
+        show_id = body.get("showId") or body.get("id")
+        is_active = body.get("is_gate_active")
+        if show_id is None or is_active is None:
+            self.send_json({"error": "Missing showId or is_gate_active"}, 400)
+            return
+
+        conn = None
+        try:
+            conn = get_db_connection()
+            cursor = conn.cursor()
+            cursor.execute(
+                "UPDATE shows SET is_gate_active = %s WHERE id = %s;",
+                [bool(is_active), int(show_id)]
+            )
+            conn.commit()
+            self.send_json({"success": True, "showId": int(show_id), "is_gate_active": bool(is_active)})
+        except Exception as e:
+            if conn:
+                try:
+                    conn.rollback()
+                except:
+                    pass
+            self.send_json({"error": "Database error: " + str(e)}, 500)
+        finally:
+            if conn:
+                conn.close()
+
+    def handle_batch_gate_shows(self, body):
+        active_ids = body.get("activeShowIds", [])
+        set_all = body.get("setAll")
+        conn = None
+        try:
+            conn = get_db_connection()
+            cursor = conn.cursor()
+            if set_all is True:
+                cursor.execute("UPDATE shows SET is_gate_active = TRUE;")
+            elif set_all is False:
+                cursor.execute("UPDATE shows SET is_gate_active = FALSE;")
+            else:
+                cursor.execute("UPDATE shows SET is_gate_active = FALSE;")
+                if active_ids:
+                    for s_id in active_ids:
+                        cursor.execute("UPDATE shows SET is_gate_active = TRUE WHERE id = %s;", [int(s_id)])
+            conn.commit()
+            self.send_json({"success": True})
         except Exception as e:
             if conn:
                 try:
@@ -1227,6 +1300,8 @@ def init_db_schema():
                 is_active BOOLEAN DEFAULT TRUE,
                 created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
             );
+            ALTER TABLE shows ADD COLUMN IF NOT EXISTS is_gate_active BOOLEAN DEFAULT TRUE;
+            UPDATE shows SET is_gate_active = TRUE WHERE is_gate_active IS NULL;
         """)
         # Check if any superuser exists
         cursor.execute("SELECT id FROM users LIMIT 1;")
