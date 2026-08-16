@@ -149,7 +149,6 @@ When hosting the application (e.g., at `neiruz.stmarkos.org`):
 | :--- | :--- | :--- |
 | **`neiruz.stmarkos.org/`** | `my-ticket.html` | **Festival Attendees** (login via ticket number + passcode to download digital ticket) |
 | **`neiruz.stmarkos.org/admin.html`** | `admin.html` | **Box Office, Gate Scanners & Admins** (requires username & password login) |
-| **`neiruz.stmarkos.org/my-ticket.html`** | `my-ticket.html` | Direct link to attendee self-service portal |
 
 ---
 
