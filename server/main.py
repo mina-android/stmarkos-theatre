@@ -1179,7 +1179,7 @@ class TheatreHTTPHandler(BaseHTTPRequestHandler):
             self.send_json({"error": "يرجى تعبئة كافة الحقول المطلوبة (اسم المستخدم، الاسم الكامل، كلمة المرور)"}, 400)
             return
 
-        if role not in ('ticket_seller', 'admin', 'superuser'):
+        if role not in ('scanner', 'ticket_seller', 'admin', 'superuser'):
             self.send_json({"error": "صلاحية غير صالحة"}, 400)
             return
 
