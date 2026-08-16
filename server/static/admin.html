@@ -669,7 +669,6 @@
                                 <th scope="col" class="px-6 py-4 text-xs font-bold text-slate-600 uppercase tracking-wider">المنطقة</th>
                                 <th scope="col" class="px-6 py-4 text-xs font-bold text-slate-600 uppercase tracking-wider">رقم التذكرة</th>
                                 <th scope="col" class="px-6 py-4 text-xs font-bold text-slate-600 uppercase tracking-wider">جهاز الإصدار</th>
-                                <th scope="col" class="px-6 py-4 text-xs font-bold text-slate-600 uppercase tracking-wider">العملية</th>
                                 <th scope="col" class="px-6 py-4 text-xs font-bold text-slate-600 uppercase tracking-wider">الوقت و التاريخ</th>
                                 <th scope="col" class="px-6 py-4 text-xs font-bold text-slate-600 uppercase tracking-wider text-center">إجراءات</th>
                             </tr>
@@ -2248,7 +2247,7 @@
                     if (!data || data.length === 0) {
                         tbody.innerHTML = `
                             <tr>
-                                <td colspan="8" class="px-6 py-6 text-center text-slate-500">لا توجد عمليات طباعة أو دخول مسجلة بالنظام حتى الآن.</td>
+                                <td colspan="7" class="px-6 py-6 text-center text-slate-500">لا توجد عمليات طباعة أو دخول مسجلة بالنظام حتى الآن.</td>
                             </tr>
                         `;
                         document.getElementById('stat-tickets-printed').innerText = 0;
@@ -2263,15 +2262,6 @@
                     data.forEach(log => {
                         const formattedDate = new Date(log.printed_at).toLocaleString('ar-EG');
                         const ticketId = log.formatted_ticket_id || formatFullTicketId(log.show_prefix, log.zone_name, log.ticket_number);
-                        
-                        let actionBadge = '';
-                        if (log.action === 'PRINTED') {
-                            actionBadge = `<span class="bg-blue-50 text-blue-700 border border-blue-200 text-xs px-2.5 py-0.5 rounded-full font-bold inline-flex items-center gap-1.5"><i class="fa-solid fa-print text-[10px]"></i> طباعة تذكرة</span>`;
-                        } else if (log.action === 'ENTERED') {
-                            actionBadge = `<span class="bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs px-2.5 py-0.5 rounded-full font-bold inline-flex items-center gap-1.5"><i class="fa-solid fa-door-open text-[10px]"></i> دخول / تحقق</span>`;
-                        } else {
-                            actionBadge = `<span class="bg-slate-100 text-slate-700 text-xs px-2.5 py-0.5 rounded font-bold border border-slate-200">${log.action}</span>`;
-                        }
 
                         let actionsCell = '';
                         if (canReprint && (log.action === 'PRINTED' || log.action === 'ENTERED')) {
@@ -2299,7 +2289,6 @@
                                 <td class="px-6 py-4 whitespace-nowrap"><span class="bg-blue-50 px-2.5 py-0.5 rounded text-xs font-bold text-blue-700 border border-blue-200">منطقة ${log.zone_name}</span></td>
                                 <td class="px-6 py-4 whitespace-nowrap font-mono text-emerald-700 font-bold">${ticketId}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-slate-600">${log.device_name || 'جهاز غير معروف'}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">${actionBadge}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-slate-500 font-mono text-xs">${formattedDate}</td>
                                 ${actionsCell}
                             </tr>
